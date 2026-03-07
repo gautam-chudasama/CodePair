@@ -1,8 +1,9 @@
 import dotenv from "dotenv";
-dotenv.config();
+dotenv.config({ quiet: true });
 import express from "express";
 import cors from "cors";
 import path from "path";
+import connectDb from "./src/lib/db.js";
 
 const app = express();
 
@@ -24,6 +25,8 @@ app.get("/", (req, res) => {
 //   });
 // }
 
-app.listen(PORT, () => {
-  console.log(`Listening on port ${PORT}`);
+connectDb().then(() => {
+  app.listen(PORT, () => {
+    console.log(`Listening on port ${PORT}`);
+  });
 });
