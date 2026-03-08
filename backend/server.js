@@ -7,6 +7,8 @@ import connectDb from "./src/lib/db.js";
 import { clerkMiddleware } from "@clerk/express";
 import { serve } from "inngest/express";
 import { inngest, functions } from "./src/lib/inngest.js";
+import { protectRoute } from "./src/middleware/protectRoute.js";
+import chatRoutes from "./src/routes/chat.routes.js";
 
 const app = express();
 
@@ -22,22 +24,15 @@ app.use(
 app.use(clerkMiddleware());
 
 app.use("/api/inngest", serve({ client: inngest, functions }));
+app.use("/api/chat", chatRoutes);
 
 const PORT = process.env.PORT || 3000;
 
-// // Use requireAuth() to protect this route
-// // If user isn't authenticated, requireAuth() will redirect back to the homepage
-// app.get('/protected', requireAuth(), async (req, res) => {
-//   // Use `getAuth()` to get the user's `userId`
-//   const { userId } = getAuth(req)
-
-//   // Use Clerk's JavaScript Backend SDK to get the user's User object
-//   const user = await clerkClient.users.getUser(userId)
-
-//   return res.json({ user })
-// })
-
 app.get("/", (req, res) => {
+  res.json({ message: "Hello World!" });
+});
+
+app.get("/user", protectRoute, (req, res) => {
   res.json({ message: "Hello World!" });
 });
 

@@ -1,3 +1,5 @@
+import dotenv from "dotenv";
+dotenv.config({ quiet: true });
 import { StreamChat } from "stream-chat";
 
 const apiKey = process.env.STREAM_API_KEY;
