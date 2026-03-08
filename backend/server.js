@@ -5,13 +5,23 @@ import cors from "cors";
 import path from "path";
 import connectDb from "./src/lib/db.js";
 import { clerkMiddleware } from "@clerk/express";
+import { serve } from "inngest/express";
+import { inngest } from "./src/lib/inngest.js";
 
 const app = express();
 
 // const __dirname = path.resolve();
 
-app.use(cors());
+app.use(express.json());
+app.use(
+  cors({
+    origin: process.env.CLIENT_URL || "http://localhost:5173",
+    credentials: true,
+  }),
+);
 app.use(clerkMiddleware());
+
+app.use("/api/inngest", serve({ client: inngest, functions }));
 
 const PORT = process.env.PORT || 3000;
 
