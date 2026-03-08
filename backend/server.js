@@ -6,7 +6,7 @@ import path from "path";
 import connectDb from "./src/lib/db.js";
 import { clerkMiddleware } from "@clerk/express";
 import { serve } from "inngest/express";
-import { inngest } from "./src/lib/inngest.js";
+import { inngest, functions } from "./src/lib/inngest.js";
 
 const app = express();
 
