@@ -121,8 +121,20 @@ export async function joinSession(req, res) {
       });
     }
 
+    if (session.status !== "active") {
+      return res.status(400).json({
+        message: "cannot join this session",
+      });
+    }
+
+    if (session.host.toString() === userId.toString()) {
+      return res.status(400).json({
+        message: "Host cannot join as participant",
+      });
+    }
+
     if (session.participant) {
-      return res.status(404).json({
+      return res.status(409).json({
         message: "Session is full",
       });
     }
@@ -166,14 +178,14 @@ export async function endSession(req, res) {
       });
     }
 
-    session.status = "completed";
-    await session.save();
-
     const call = streamClient.video.call("default", session.callId);
     await call.delete({ hard: true });
 
     const channel = chatClient.channel("messaging", session.callId);
     await channel.delete();
+
+    session.status = "completed";
+    await session.save();
 
     res.status(200).json({
       message: "Session ended successfully",
