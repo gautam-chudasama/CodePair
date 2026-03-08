@@ -9,6 +9,7 @@ import { serve } from "inngest/express";
 import { inngest, functions } from "./src/lib/inngest.js";
 import { protectRoute } from "./src/middleware/protectRoute.js";
 import chatRoutes from "./src/routes/chat.routes.js";
+import sessionRoutes from "./src/routes/session.routes.js";
 
 const app = express();
 
@@ -25,6 +26,7 @@ app.use(clerkMiddleware());
 
 app.use("/api/inngest", serve({ client: inngest, functions }));
 app.use("/api/chat", chatRoutes);
+app.use("/api/sessions", sessionRoutes);
 
 const PORT = process.env.PORT || 3000;
 
