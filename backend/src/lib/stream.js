@@ -1,5 +1,6 @@
 import dotenv from "dotenv";
 dotenv.config({ quiet: true });
+import { StreamClient } from "@stream-io/node-sdk";
 import { StreamChat } from "stream-chat";
 
 const apiKey = process.env.STREAM_API_KEY;
@@ -9,6 +10,7 @@ if (!apiKey || !apiSecret) {
   console.log("STREAM_API_KEY and STREAM_API_SECRET must be set");
 }
 
+export const streamClient = new StreamClient(apiKey, apiSecret);
 export const chatClient = StreamChat.getInstance(apiKey, apiSecret);
 
 export const upsertStreamUser = async (userData) => {
