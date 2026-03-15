@@ -28,6 +28,7 @@ export async function executeCode(language, code) {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        // "User-Agent": "code-runner-app",
       },
       body: JSON.stringify({
         language: languageConfig.language,
