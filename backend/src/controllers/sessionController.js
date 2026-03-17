@@ -15,32 +15,63 @@ export async function createSession(req, res) {
 
     const callId = `session_${Date.now()}_${Math.random().toString(36).substring(7)}`;
 
-    const session = await Session.create({
-      problem,
-      difficulty,
-      host: userId,
-      callId,
-    });
+    // Step 1: Create session in DB
+    let session;
+    try {
+      session = await Session.create({
+        problem,
+        difficulty,
+        host: userId,
+        callId,
+      });
+      console.log("✅ Session created in DB:", session._id);
+    } catch (dbError) {
+      console.error("❌ DB session creation failed:", dbError.message);
+      return res
+        .status(500)
+        .json({ message: "Failed to create session in database" });
+    }
 
-    await streamClient.video.call("default", callId).getOrCreate({
-      data: {
-        created_by: clerkId,
-        custom: { problem, difficulty, sessionId: session._id.toString() },
-      },
-    });
+    // Step 2: Create Stream video call
+    try {
+      await streamClient.video.call("default", callId).getOrCreate({
+        data: {
+          created_by_id: clerkId,
+          custom: { problem, difficulty, sessionId: session._id.toString() },
+        },
+      });
+      console.log("✅ Stream video call created:", callId);
+    } catch (streamVideoError) {
+      console.error(
+        "❌ Stream video call creation failed:",
+        streamVideoError.message,
+      );
+      // Clean up DB session since video call failed
+      await Session.findByIdAndDelete(session._id).catch(() => {});
+      return res.status(500).json({ message: "Failed to create video call" });
+    }
 
-    const channel = chatClient.channel("messaging", callId, {
-      name: `${problem} Session`,
-      created_by_id: clerkId,
-      members: [clerkId],
-    });
-
-    await channel.create();
+    // Step 3: Create Stream chat channel
+    try {
+      const channel = chatClient.channel("messaging", callId, {
+        name: `${problem} Session`,
+        created_by_id: clerkId,
+        members: [clerkId],
+      });
+      await channel.create();
+      console.log("✅ Stream chat channel created:", callId);
+    } catch (chatError) {
+      console.error(
+        "❌ Stream chat channel creation failed:",
+        chatError.message,
+      );
+      // Don't fail the whole request for chat — session and video call are more critical
+      // But log it clearly
+    }
 
     res.status(201).json({ session });
   } catch (error) {
-    console.log("Error in createSession controller: ", error);
-
+    console.error("❌ Error in createSession controller:", error);
     res.status(500).json({
       message: "Internal server error",
     });
@@ -143,8 +174,16 @@ export async function joinSession(req, res) {
     session.participant = userId;
     await session.save();
 
-    const channel = chatClient.channel("messaging", session.callId);
-    await channel.addMembers([clerkId]);
+    try {
+      const channel = chatClient.channel("messaging", session.callId);
+      await channel.addMembers([clerkId]);
+    } catch (chatError) {
+      console.error(
+        "❌ Failed to add member to chat channel:",
+        chatError.message,
+      );
+      // Don't fail the join — participant is saved, chat is secondary
+    }
 
     res.status(200).json({ session });
   } catch (error) {
@@ -179,11 +218,19 @@ export async function endSession(req, res) {
       });
     }
 
-    const call = streamClient.video.call("default", session.callId);
-    await call.delete({ hard: true });
+    try {
+      const call = streamClient.video.call("default", session.callId);
+      await call.delete({ hard: true });
+    } catch (streamErr) {
+      console.error("❌ Failed to delete stream call:", streamErr.message);
+    }
 
-    const channel = chatClient.channel("messaging", session.callId);
-    await channel.delete();
+    try {
+      const channel = chatClient.channel("messaging", session.callId);
+      await channel.delete();
+    } catch (chatErr) {
+      console.error("❌ Failed to delete chat channel:", chatErr.message);
+    }
 
     session.status = "completed";
     await session.save();
