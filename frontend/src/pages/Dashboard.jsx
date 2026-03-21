@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router";
 import { useUser } from "@clerk/react";
 import { useState } from "react";
+import { motion } from "framer-motion";
 import {
   useActiveSessions,
   useCreateSession,
@@ -58,13 +59,19 @@ const Dashboard = () =>  {
 
   return (
     <>
-      <div className="min-h-screen bg-base-300">
+      <div className="min-h-screen bg-base-100 bg-aurora text-base-content overflow-x-hidden relative">
         <Navbar />
-        <WelcomeSection onCreateSession={() => setShowCreateModal(true)} />
+        
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          className="container mx-auto px-6 pb-20 pt-10"
+        >
+          <WelcomeSection onCreateSession={() => setShowCreateModal(true)} />
 
-        {/* Grid layout */}
-        <div className="container mx-auto px-6 pb-16">
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          {/* Grid layout */}
+          <div className="mt-8 grid grid-cols-1 lg:grid-cols-3 gap-6">
             <StatsCards
               activeSessionsCount={activeSessions.length}
               recentSessionsCount={recentSessions.length}
@@ -80,7 +87,7 @@ const Dashboard = () =>  {
             sessions={recentSessions}
             isLoading={loadingRecentSessions}
           />
-        </div>
+        </motion.div>
       </div>
 
       <CreateSessionModal

@@ -1,79 +1,77 @@
 import { Link, useLocation } from "react-router";
-import { BookOpenIcon, LayoutDashboardIcon, SparklesIcon } from "lucide-react";
+import { BookOpenIcon, LayoutDashboardIcon, Code2Icon } from "lucide-react";
 import { UserButton } from "@clerk/react";
+import { motion } from "framer-motion";
 
 function Navbar() {
   const location = useLocation();
-
-  // console.log(location);
-
   const isActive = (path) => location.pathname === path;
 
   return (
-    <nav className="bg-base-100/80 backdrop-blur-md border-b border-primary/20 sticky top-0 z-50 shadow-lg">
-      <div className="max-w-7xl mx-auto p-4 flex items-center justify-between">
+    <div className="w-full flex justify-center pt-6 pb-2 sticky top-0 z-50 pointer-events-none">
+      <motion.nav 
+        initial={{ y: -50, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ duration: 0.4 }}
+        className="glass-panel rounded-full px-6 py-3 flex items-center justify-between w-[95%] max-w-7xl pointer-events-auto"
+      >
         {/* LOGO */}
         <Link
           to="/"
-          className="group flex items-center gap-3 hover:scale-105 transition-transform duration-200"
+          className="group flex items-center gap-3"
         >
-          <div className="size-10 rounded-xl bg-gradient-to-r from-primary via-secondary to-accent flex items-center justify-center shadow-lg ">
-            <SparklesIcon className="size-6 text-white" />
+          <div className="relative size-10 flex items-center justify-center group-hover:scale-105 transition-transform duration-300">
+            <div className="absolute inset-0 bg-gradient-to-tr from-primary to-secondary rounded-xl rotate-6 opacity-70 group-hover:rotate-12 group-hover:opacity-100 transition-all duration-300"></div>
+            <div className="absolute inset-0 bg-base-100/80 rounded-xl"></div>
+            <div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-secondary/20 rounded-xl backdrop-blur-sm border border-white/20"></div>
+            <Code2Icon className="size-5 text-white relative z-10 drop-shadow-[0_0_8px_rgba(255,255,255,0.5)]" />
           </div>
 
-          <div className="flex flex-col">
-            <span className="font-black text-xl bg-gradient-to-r from-primary via-secondary to-accent bg-clip-text text-transparent font-mono tracking-wider">
-              Code Pair
-            </span>
-            <span className="text-xs text-base-content/60 font-medium -mt-1">
-              Code Together
-            </span>
-          </div>
+          <span className="font-black text-2xl tracking-tighter">
+            Code<span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-secondary">Pair</span>
+          </span>
         </Link>
 
-        <div className="flex items-center gap-1">
-          {/* PROBLEMS PAGE LINK */}
+        {/* LINKS & AUTH */}
+        <div className="flex items-center gap-2">
           <Link
             to={"/problems"}
-            className={`px-4 py-2.5 rounded-lg transition-all duration-200 
+            className={`px-4 py-2 rounded-full transition-all duration-300 flex items-center gap-x-2 border
               ${
                 isActive("/problems")
-                  ? "bg-primary text-primary-content"
-                  : "hover:bg-base-200 text-base-content/70 hover:text-base-content"
-              }
-              
-              `}
+                  ? "bg-primary/20 border-primary/50 text-primary-content shadow-[0_0_15px_rgba(139,92,246,0.2)]"
+                  : "border-transparent hover:bg-white/5 text-base-content/70 hover:text-base-content"
+              }`}
           >
-            <div className="flex items-center gap-x-2.5">
-              <BookOpenIcon className="size-4" />
-              <span className="font-medium hidden sm:inline">Problems</span>
-            </div>
+            <BookOpenIcon className="size-4" />
+            <span className="font-medium hidden sm:inline text-sm">Problems</span>
           </Link>
 
-          {/* DASHBORD PAGE LINK */}
           <Link
             to={"/dashboard"}
-            className={`px-4 py-2.5 rounded-lg transition-all duration-200 
+            className={`px-4 py-2 rounded-full transition-all duration-300 flex items-center gap-x-2 border
               ${
                 isActive("/dashboard")
-                  ? "bg-primary text-primary-content"
-                  : "hover:bg-base-200 text-base-content/70 hover:text-base-content"
-              }
-              
-              `}
+                  ? "bg-primary/20 border-primary/50 text-primary-content shadow-[0_0_15px_rgba(139,92,246,0.2)]"
+                  : "border-transparent hover:bg-white/5 text-base-content/70 hover:text-base-content"
+              }`}
           >
-            <div className="flex items-center gap-x-2.5">
-              <LayoutDashboardIcon className="size-4" />
-              <span className="font-medium hidden sm:inline">Dashboard</span>
-            </div>
+            <LayoutDashboardIcon className="size-4" />
+            <span className="font-medium hidden sm:inline text-sm">Dashboard</span>
           </Link>
 
-          <div className="ml-4 mt-2">
-            <UserButton />
+          <div className="ml-2 pl-2 border-l border-white/10 flex items-center pt-1">
+            <UserButton 
+              appearance={{
+                elements: {
+                  avatarBox: "size-9 border-2 border-primary/50 hover:border-primary transition-colors hover:shadow-[0_0_15px_rgba(139,92,246,0.3)] rounded-full"
+                }
+              }}
+            />
           </div>
         </div>
-      </div>
-    </nav>
+      </motion.nav>
+    </div>
   );
 }
 export default Navbar;

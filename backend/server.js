@@ -2,7 +2,6 @@ import dotenv from "dotenv";
 dotenv.config({ quiet: true });
 import express from "express";
 import cors from "cors";
-import path from "path";
 import connectDb from "./src/lib/db.js";
 import { clerkMiddleware } from "@clerk/express";
 import { serve } from "inngest/express";
@@ -13,12 +12,10 @@ import sessionRoutes from "./src/routes/session.routes.js";
 
 const app = express();
 
-// const __dirname = path.resolve();
-
 app.use(express.json());
 app.use(
   cors({
-    origin: [process.env.CLIENT_URL,"http://localhost:2000"],
+    origin: [process.env.CLIENT_URL, "http://localhost:2000"],
     credentials: true,
   }),
 );
@@ -34,7 +31,7 @@ app.post("/api/piston/execute", async (req, res) => {
     const response = await fetch("http://localhost:2000/api/v2/execute", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(req.body)
+      body: JSON.stringify(req.body),
     });
     const data = await response.json();
     return res.status(response.status).json(data);
