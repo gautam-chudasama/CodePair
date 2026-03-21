@@ -1,0 +1,25 @@
+total 80
+drwxr-xr-x   1 root   root   4096 Mar 21 15:30 .
+drwxr-xr-x   1 root   root   4096 Mar 21 15:30 ..
+-rwxr-xr-x   1 root   root      0 Mar 21 15:30 .dockerenv
+drwxr-xr-x   1 root   root   4096 Feb  8  2025 bin
+drwxr-xr-x   2 root   root   4096 Jan 30  2021 boot
+drwxr-xr-x   8 root   root   3200 Mar 21 16:16 dev
+drwxr-xr-x   1 root   root   4096 Mar 21 15:30 etc
+drwxr-xr-x   1 root   root   4096 Feb  9  2021 home
+drwxr-xr-x   1 root   root   4096 Feb  8  2025 lib
+drwxr-xr-x   1 root   root   4096 Feb  8  2025 lib64
+drwxr-xr-x   2 root   root   4096 Feb  8  2021 media
+drwxr-xr-x   2 root   root   4096 Feb  8  2021 mnt
+drwxr-xr-x   1 root   root   4096 Feb 23  2021 opt
+drwxr-xr-x   3 piston piston 4096 Mar 21 15:30 piston
+drwxr-xr-x   1 root   root   4096 Feb  8  2025 piston_api
+dr-xr-xr-x 248 root   root      0 Mar 21 16:16 proc
+drwx------   1 root   root   4096 Feb  8  2025 root
+drwxr-xr-x   1 root   root   4096 Mar 21 15:52 run
+drwxr-xr-x   1 root   root   4096 Feb  8  2025 sbin
+drwxr-xr-x   2 root   root   4096 Feb  8  2021 srv
+dr-xr-xr-x  13 root   root      0 Mar 21 16:16 sys
+drwxrwxrwt   2 root   root     40 Mar 21 16:17 tmp
+drwxr-xr-x   1 root   root   4096 Feb  8  2021 usr
+drwxr-xr-x   1 root   root   4096 Feb  8  2021 var
