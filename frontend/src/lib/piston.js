@@ -1,10 +1,10 @@
 // Piston API is a service for code execution
 
-const PISTON_API = "https://emkc.org/api/v2/piston";
+const PISTON_API = `${import.meta.env.VITE_BACKEND_URL}/piston`;
 
 const LANGUAGE_VERSIONS = {
-  javascript: { language: "javascript", version: "18.15.0" },
-  python: { language: "python", version: "3.10.0" },
+  javascript: { language: "javascript", version: "20.11.1" },
+  python: { language: "python", version: "3.12.0" }, // Note: You need to install Python in your Piston Docker container first!
   java: { language: "java", version: "15.0.2" },
 };
 
