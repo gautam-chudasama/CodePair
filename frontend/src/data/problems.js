@@ -39,17 +39,17 @@ export const PROBLEMS = {
 }
 
 // Test cases
-console.log(twoSum([2, 7, 11, 15], 9)); // Expected: [0, 1]
-console.log(twoSum([3, 2, 4], 6)); // Expected: [1, 2]
-console.log(twoSum([3, 3], 6)); // Expected: [0, 1]`,
+console.log(JSON.stringify(twoSum([2, 7, 11, 15], 9)));
+console.log(JSON.stringify(twoSum([3, 2, 4], 6)));
+console.log(JSON.stringify(twoSum([3, 3], 6)));`,
       python: `def twoSum(nums, target):
     # Write your solution here
     pass
 
 # Test cases
-print(twoSum([2, 7, 11, 15], 9))  # Expected: [0, 1]
-print(twoSum([3, 2, 4], 6))  # Expected: [1, 2]
-print(twoSum([3, 3], 6))  # Expected: [0, 1]`,
+print(twoSum([2, 7, 11, 15], 9))
+print(twoSum([3, 2, 4], 6))
+print(twoSum([3, 3], 6))`,
       java: `import java.util.*;
 
 class Solution {
@@ -60,9 +60,9 @@ class Solution {
     }
     
     public static void main(String[] args) {
-        System.out.println(Arrays.toString(twoSum(new int[]{2, 7, 11, 15}, 9))); // Expected: [0, 1]
-        System.out.println(Arrays.toString(twoSum(new int[]{3, 2, 4}, 6))); // Expected: [1, 2]
-        System.out.println(Arrays.toString(twoSum(new int[]{3, 3}, 6))); // Expected: [0, 1]
+        System.out.println(Arrays.toString(twoSum(new int[]{2, 7, 11, 15}, 9)));
+        System.out.println(Arrays.toString(twoSum(new int[]{3, 2, 4}, 6)));
+        System.out.println(Arrays.toString(twoSum(new int[]{3, 3}, 6)));
     }
 }`,
     },
@@ -104,11 +104,11 @@ class Solution {
 // Test cases
 let test1 = ["h","e","l","l","o"];
 reverseString(test1);
-console.log(test1); // Expected: ["o","l","l","e","h"]
+console.log(JSON.stringify(test1));
 
 let test2 = ["H","a","n","n","a","h"];
 reverseString(test2);
-console.log(test2); // Expected: ["h","a","n","n","a","H"]`,
+console.log(JSON.stringify(test2));`,
       python: `def reverseString(s):
     # Write your solution here
     pass
@@ -116,11 +116,11 @@ console.log(test2); // Expected: ["h","a","n","n","a","H"]`,
 # Test cases
 test1 = ["h","e","l","l","o"]
 reverseString(test1)
-print(test1)  # Expected: ["o","l","l","e","h"]
+print(test1)
 
 test2 = ["H","a","n","n","a","h"]
 reverseString(test2)
-print(test2)  # Expected: ["h","a","n","n","a","H"]`,
+print(test2)`,
       java: `import java.util.*;
 
 class Solution {
@@ -132,11 +132,11 @@ class Solution {
     public static void main(String[] args) {
         char[] test1 = {'h','e','l','l','o'};
         reverseString(test1);
-        System.out.println(Arrays.toString(test1)); // Expected: [o, l, l, e, h]
+        System.out.println(Arrays.toString(test1));
         
         char[] test2 = {'H','a','n','n','a','h'};
         reverseString(test2);
-        System.out.println(Arrays.toString(test2)); // Expected: [h, a, n, n, a, H]
+        System.out.println(Arrays.toString(test2));
     }
 }`,
     },
@@ -187,17 +187,17 @@ class Solution {
 }
 
 // Test cases
-console.log(isPalindrome("A man, a plan, a canal: Panama")); // Expected: true
-console.log(isPalindrome("race a car")); // Expected: false
-console.log(isPalindrome(" ")); // Expected: true`,
+console.log(isPalindrome("A man, a plan, a canal: Panama"));
+console.log(isPalindrome("race a car"));
+console.log(isPalindrome(" "));`,
       python: `def isPalindrome(s):
     # Write your solution here
     pass
 
 # Test cases
-print(isPalindrome("A man, a plan, a canal: Panama"))  # Expected: True
-print(isPalindrome("race a car"))  # Expected: False
-print(isPalindrome(" "))  # Expected: True`,
+print(isPalindrome("A man, a plan, a canal: Panama"))
+print(isPalindrome("race a car"))
+print(isPalindrome(" "))`,
       java: `class Solution {
     public static boolean isPalindrome(String s) {
         // Write your solution here
@@ -206,9 +206,9 @@ print(isPalindrome(" "))  # Expected: True`,
     }
     
     public static void main(String[] args) {
-        System.out.println(isPalindrome("A man, a plan, a canal: Panama")); // Expected: true
-        System.out.println(isPalindrome("race a car")); // Expected: false
-        System.out.println(isPalindrome(" ")); // Expected: true
+        System.out.println(isPalindrome("A man, a plan, a canal: Panama"));
+        System.out.println(isPalindrome("race a car"));
+        System.out.println(isPalindrome(" "));
     }
 }`,
     },
@@ -253,17 +253,17 @@ print(isPalindrome(" "))  # Expected: True`,
 }
 
 // Test cases
-console.log(maxSubArray([-2,1,-3,4,-1,2,1,-5,4])); // Expected: 6
-console.log(maxSubArray([1])); // Expected: 1
-console.log(maxSubArray([5,4,-1,7,8])); // Expected: 23`,
+console.log(maxSubArray([-2,1,-3,4,-1,2,1,-5,4]));
+console.log(maxSubArray([1]));
+console.log(maxSubArray([5,4,-1,7,8]));`,
       python: `def maxSubArray(nums):
     # Write your solution here
     pass
 
 # Test cases
-print(maxSubArray([-2,1,-3,4,-1,2,1,-5,4]))  # Expected: 6
-print(maxSubArray([1]))  # Expected: 1
-print(maxSubArray([5,4,-1,7,8]))  # Expected: 23`,
+print(maxSubArray([-2,1,-3,4,-1,2,1,-5,4]))
+print(maxSubArray([1]))
+print(maxSubArray([5,4,-1,7,8]))`,
       java: `class Solution {
     public static int maxSubArray(int[] nums) {
         // Write your solution here
@@ -272,9 +272,9 @@ print(maxSubArray([5,4,-1,7,8]))  # Expected: 23`,
     }
     
     public static void main(String[] args) {
-        System.out.println(maxSubArray(new int[]{-2,1,-3,4,-1,2,1,-5,4})); // Expected: 6
-        System.out.println(maxSubArray(new int[]{1})); // Expected: 1
-        System.out.println(maxSubArray(new int[]{5,4,-1,7,8})); // Expected: 23
+        System.out.println(maxSubArray(new int[]{-2,1,-3,4,-1,2,1,-5,4}));
+        System.out.println(maxSubArray(new int[]{1}));
+        System.out.println(maxSubArray(new int[]{5,4,-1,7,8}));
     }
 }`,
     },
@@ -318,15 +318,15 @@ print(maxSubArray([5,4,-1,7,8]))  # Expected: 23`,
 }
 
 // Test cases
-console.log(maxArea([1,8,6,2,5,4,8,3,7])); // Expected: 49
-console.log(maxArea([1,1])); // Expected: 1`,
+console.log(maxArea([1,8,6,2,5,4,8,3,7]));
+console.log(maxArea([1,1]));`,
       python: `def maxArea(height):
     # Write your solution here
     pass
 
 # Test cases
-print(maxArea([1,8,6,2,5,4,8,3,7]))  # Expected: 49
-print(maxArea([1,1]))  # Expected: 1`,
+print(maxArea([1,8,6,2,5,4,8,3,7]))
+print(maxArea([1,1]))`,
       java: `class Solution {
     public static int maxArea(int[] height) {
         // Write your solution here
@@ -335,8 +335,8 @@ print(maxArea([1,1]))  # Expected: 1`,
     }
     
     public static void main(String[] args) {
-        System.out.println(maxArea(new int[]{1,8,6,2,5,4,8,3,7})); // Expected: 49
-        System.out.println(maxArea(new int[]{1,1})); // Expected: 1
+        System.out.println(maxArea(new int[]{1,8,6,2,5,4,8,3,7}));
+        System.out.println(maxArea(new int[]{1,1}));
     }
 }`,
     },
@@ -344,6 +344,352 @@ print(maxArea([1,1]))  # Expected: 1`,
       javascript: "49\n1",
       python: "49\n1",
       java: "49\n1",
+    },
+  },
+
+  // ═══════════════════════════════════════════
+  // NEW PROBLEMS BELOW
+  // ═══════════════════════════════════════════
+
+  "fizz-buzz": {
+    id: "fizz-buzz",
+    title: "Fizz Buzz",
+    difficulty: "Easy",
+    category: "Math • Simulation",
+    description: {
+      text: "Given an integer n, return a string array answer (1-indexed) where: answer[i] == \"FizzBuzz\" if i is divisible by 3 and 5, answer[i] == \"Fizz\" if i is divisible by 3, answer[i] == \"Buzz\" if i is divisible by 5, and answer[i] == i (as a string) otherwise.",
+      notes: [],
+    },
+    examples: [
+      {
+        input: "n = 3",
+        output: '["1","2","Fizz"]',
+      },
+      {
+        input: "n = 5",
+        output: '["1","2","Fizz","4","Buzz"]',
+      },
+      {
+        input: "n = 15",
+        output: '["1","2","Fizz","4","Buzz","Fizz","7","8","Fizz","Buzz","11","Fizz","13","14","FizzBuzz"]',
+      },
+    ],
+    constraints: ["1 ≤ n ≤ 10⁴"],
+    starterCode: {
+      javascript: `function fizzBuzz(n) {
+  // Write your solution here
+  
+}
+
+// Test cases
+console.log(JSON.stringify(fizzBuzz(3)));
+console.log(JSON.stringify(fizzBuzz(5)));
+console.log(JSON.stringify(fizzBuzz(15)));`,
+      python: `def fizzBuzz(n):
+    # Write your solution here
+    pass
+
+# Test cases
+print(fizzBuzz(3))
+print(fizzBuzz(5))
+print(fizzBuzz(15))`,
+      java: `import java.util.*;
+
+class Solution {
+    public static List<String> fizzBuzz(int n) {
+        // Write your solution here
+        
+        return new ArrayList<>();
+    }
+    
+    public static void main(String[] args) {
+        System.out.println(fizzBuzz(3));
+        System.out.println(fizzBuzz(5));
+        System.out.println(fizzBuzz(15));
+    }
+}`,
+    },
+    expectedOutput: {
+      javascript: '["1","2","Fizz"]\n["1","2","Fizz","4","Buzz"]\n["1","2","Fizz","4","Buzz","Fizz","7","8","Fizz","Buzz","11","Fizz","13","14","FizzBuzz"]',
+      python: "['1', '2', 'Fizz']\n['1', '2', 'Fizz', '4', 'Buzz']\n['1', '2', 'Fizz', '4', 'Buzz', 'Fizz', '7', '8', 'Fizz', 'Buzz', '11', 'Fizz', '13', '14', 'FizzBuzz']",
+      java: "[1, 2, Fizz]\n[1, 2, Fizz, 4, Buzz]\n[1, 2, Fizz, 4, Buzz, Fizz, 7, 8, Fizz, Buzz, 11, Fizz, 13, 14, FizzBuzz]",
+    },
+  },
+
+  "climbing-stairs": {
+    id: "climbing-stairs",
+    title: "Climbing Stairs",
+    difficulty: "Easy",
+    category: "Dynamic Programming • Math",
+    description: {
+      text: "You are climbing a staircase. It takes n steps to reach the top. Each time you can either climb 1 or 2 steps. In how many distinct ways can you climb to the top?",
+      notes: [],
+    },
+    examples: [
+      {
+        input: "n = 2",
+        output: "2",
+        explanation: "There are two ways to climb to the top: 1+1 and 2.",
+      },
+      {
+        input: "n = 3",
+        output: "3",
+        explanation: "There are three ways: 1+1+1, 1+2, and 2+1.",
+      },
+      {
+        input: "n = 5",
+        output: "8",
+      },
+    ],
+    constraints: ["1 ≤ n ≤ 45"],
+    starterCode: {
+      javascript: `function climbStairs(n) {
+  // Write your solution here
+  
+}
+
+// Test cases
+console.log(climbStairs(2));
+console.log(climbStairs(3));
+console.log(climbStairs(5));`,
+      python: `def climbStairs(n):
+    # Write your solution here
+    pass
+
+# Test cases
+print(climbStairs(2))
+print(climbStairs(3))
+print(climbStairs(5))`,
+      java: `class Solution {
+    public static int climbStairs(int n) {
+        // Write your solution here
+        
+        return 0;
+    }
+    
+    public static void main(String[] args) {
+        System.out.println(climbStairs(2));
+        System.out.println(climbStairs(3));
+        System.out.println(climbStairs(5));
+    }
+}`,
+    },
+    expectedOutput: {
+      javascript: "2\n3\n8",
+      python: "2\n3\n8",
+      java: "2\n3\n8",
+    },
+  },
+
+  "merge-sorted-array": {
+    id: "merge-sorted-array",
+    title: "Merge Sorted Array",
+    difficulty: "Easy",
+    category: "Array • Two Pointers • Sorting",
+    description: {
+      text: "You are given two integer arrays nums1 and nums2, sorted in non-decreasing order, and two integers m and n, representing the number of elements in nums1 and nums2 respectively. Merge nums2 into nums1 as one sorted array.",
+      notes: [
+        "The final sorted array should not be returned by the function, but instead be stored inside the array nums1.",
+        "To accommodate this, nums1 has a length of m + n, where the first m elements denote the elements that should be merged, and the last n elements are set to 0.",
+      ],
+    },
+    examples: [
+      {
+        input: "nums1 = [1,2,3,0,0,0], m = 3, nums2 = [2,5,6], n = 3",
+        output: "[1,2,2,3,5,6]",
+      },
+      {
+        input: "nums1 = [1], m = 1, nums2 = [], n = 0",
+        output: "[1]",
+      },
+    ],
+    constraints: [
+      "nums1.length == m + n",
+      "nums2.length == n",
+      "0 ≤ m, n ≤ 200",
+    ],
+    starterCode: {
+      javascript: `function merge(nums1, m, nums2, n) {
+  // Write your solution here
+  
+}
+
+// Test cases
+let arr1 = [1,2,3,0,0,0];
+merge(arr1, 3, [2,5,6], 3);
+console.log(JSON.stringify(arr1));
+
+let arr2 = [1];
+merge(arr2, 1, [], 0);
+console.log(JSON.stringify(arr2));`,
+      python: `def merge(nums1, m, nums2, n):
+    # Write your solution here
+    pass
+
+# Test cases
+arr1 = [1,2,3,0,0,0]
+merge(arr1, 3, [2,5,6], 3)
+print(arr1)
+
+arr2 = [1]
+merge(arr2, 1, [], 0)
+print(arr2)`,
+      java: `import java.util.*;
+
+class Solution {
+    public static void merge(int[] nums1, int m, int[] nums2, int n) {
+        // Write your solution here
+        
+    }
+    
+    public static void main(String[] args) {
+        int[] arr1 = {1,2,3,0,0,0};
+        merge(arr1, 3, new int[]{2,5,6}, 3);
+        System.out.println(Arrays.toString(arr1));
+        
+        int[] arr2 = {1};
+        merge(arr2, 1, new int[]{}, 0);
+        System.out.println(Arrays.toString(arr2));
+    }
+}`,
+    },
+    expectedOutput: {
+      javascript: "[1,2,2,3,5,6]\n[1]",
+      python: "[1, 2, 2, 3, 5, 6]\n[1]",
+      java: "[1, 2, 2, 3, 5, 6]\n[1]",
+    },
+  },
+
+  "longest-substring": {
+    id: "longest-substring",
+    title: "Longest Substring Without Repeating Characters",
+    difficulty: "Medium",
+    category: "String • Sliding Window • Hash Table",
+    description: {
+      text: "Given a string s, find the length of the longest substring without repeating characters.",
+      notes: [],
+    },
+    examples: [
+      {
+        input: 's = "abcabcbb"',
+        output: "3",
+        explanation: 'The answer is "abc", with the length of 3.',
+      },
+      {
+        input: 's = "bbbbb"',
+        output: "1",
+        explanation: 'The answer is "b", with the length of 1.',
+      },
+      {
+        input: 's = "pwwkew"',
+        output: "3",
+        explanation: 'The answer is "wke", with the length of 3.',
+      },
+    ],
+    constraints: [
+      "0 ≤ s.length ≤ 5 * 10⁴",
+      "s consists of English letters, digits, symbols and spaces",
+    ],
+    starterCode: {
+      javascript: `function lengthOfLongestSubstring(s) {
+  // Write your solution here
+  
+}
+
+// Test cases
+console.log(lengthOfLongestSubstring("abcabcbb"));
+console.log(lengthOfLongestSubstring("bbbbb"));
+console.log(lengthOfLongestSubstring("pwwkew"));`,
+      python: `def lengthOfLongestSubstring(s):
+    # Write your solution here
+    pass
+
+# Test cases
+print(lengthOfLongestSubstring("abcabcbb"))
+print(lengthOfLongestSubstring("bbbbb"))
+print(lengthOfLongestSubstring("pwwkew"))`,
+      java: `import java.util.*;
+
+class Solution {
+    public static int lengthOfLongestSubstring(String s) {
+        // Write your solution here
+        
+        return 0;
+    }
+    
+    public static void main(String[] args) {
+        System.out.println(lengthOfLongestSubstring("abcabcbb"));
+        System.out.println(lengthOfLongestSubstring("bbbbb"));
+        System.out.println(lengthOfLongestSubstring("pwwkew"));
+    }
+}`,
+    },
+    expectedOutput: {
+      javascript: "3\n1\n3",
+      python: "3\n1\n3",
+      java: "3\n1\n3",
+    },
+  },
+
+  "trapping-rain-water": {
+    id: "trapping-rain-water",
+    title: "Trapping Rain Water",
+    difficulty: "Hard",
+    category: "Array • Two Pointers • Stack",
+    description: {
+      text: "Given n non-negative integers representing an elevation map where the width of each bar is 1, compute how much water it can trap after raining.",
+      notes: [],
+    },
+    examples: [
+      {
+        input: "height = [0,1,0,2,1,0,1,3,2,1,2,1]",
+        output: "6",
+        explanation:
+          "The elevation map [0,1,0,2,1,0,1,3,2,1,2,1] can trap 6 units of rain water.",
+      },
+      {
+        input: "height = [4,2,0,3,2,5]",
+        output: "9",
+      },
+    ],
+    constraints: [
+      "n == height.length",
+      "1 ≤ n ≤ 2 * 10⁴",
+      "0 ≤ height[i] ≤ 10⁵",
+    ],
+    starterCode: {
+      javascript: `function trap(height) {
+  // Write your solution here
+  
+}
+
+// Test cases
+console.log(trap([0,1,0,2,1,0,1,3,2,1,2,1]));
+console.log(trap([4,2,0,3,2,5]));`,
+      python: `def trap(height):
+    # Write your solution here
+    pass
+
+# Test cases
+print(trap([0,1,0,2,1,0,1,3,2,1,2,1]))
+print(trap([4,2,0,3,2,5]))`,
+      java: `class Solution {
+    public static int trap(int[] height) {
+        // Write your solution here
+        
+        return 0;
+    }
+    
+    public static void main(String[] args) {
+        System.out.println(trap(new int[]{0,1,0,2,1,0,1,3,2,1,2,1}));
+        System.out.println(trap(new int[]{4,2,0,3,2,5}));
+    }
+}`,
+    },
+    expectedOutput: {
+      javascript: "6\n9",
+      python: "6\n9",
+      java: "6\n9",
     },
   },
 };

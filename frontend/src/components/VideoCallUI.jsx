@@ -18,6 +18,7 @@ import {
 
 import "@stream-io/video-react-sdk/dist/css/styles.css";
 import "stream-chat-react/dist/css/v2/index.css";
+import { motion, AnimatePresence } from "framer-motion";
 
 function VideoCallUI({ chatClient, channel }) {
   const navigate = useNavigate();
@@ -28,77 +29,92 @@ function VideoCallUI({ chatClient, channel }) {
 
   if (callingState === CallingState.JOINING) {
     return (
-      <div className="h-full flex items-center justify-center relative z-10 bg-black/60 backdrop-blur-md">
+      <div className="h-full flex items-center justify-center relative z-10 bg-black/70 backdrop-blur-xl">
         <div className="text-center">
-          <Loader2Icon className="w-12 h-12 mx-auto animate-spin text-primary mb-6" />
-          <p className="text-xl font-bold text-white tracking-wide">Connecting to Peer...</p>
+          <div className="relative inline-block mb-6">
+            <Loader2Icon className="w-10 h-10 md:w-12 md:h-12 animate-spin text-primary" />
+            <div className="absolute inset-0 w-10 h-10 md:w-12 md:h-12 rounded-full animate-ping opacity-20 bg-primary" />
+          </div>
+          <p className="text-lg md:text-xl font-bold text-white tracking-wide">Connecting to Peer...</p>
+          <p className="text-xs md:text-sm text-white/40 mt-2">Securing peer-to-peer video streams</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="h-full flex gap-4 relative str-video overflow-hidden p-4">
-      <div className="flex-1 flex flex-col gap-4">
+    <div className="h-full flex gap-2 md:gap-4 relative str-video overflow-hidden p-2 md:p-4">
+      <div className="flex-1 flex flex-col gap-2 md:gap-4 min-w-0">
         {/* Participants count badge and Chat Toggle */}
-        <div className="flex items-center justify-between gap-4 glass-panel p-4 rounded-2xl shadow-[0_0_20px_rgba(0,0,0,0.5)] z-10">
-          <div className="flex items-center gap-3 bg-white/5 px-4 py-2 rounded-xl border border-white/10">
-            <UsersIcon className="w-5 h-5 text-primary" />
-            <span className="font-bold text-white text-sm tracking-wide">
+        <div className="flex items-center justify-between gap-2 md:gap-4 glass-card p-2.5 md:p-4 rounded-xl md:rounded-2xl z-10">
+          <div className="flex items-center gap-2 md:gap-3 bg-white/[0.04] px-3 md:px-4 py-1.5 md:py-2 rounded-lg md:rounded-xl border border-white/[0.06]">
+            <UsersIcon className="w-4 h-4 md:w-5 md:h-5 text-primary" />
+            <span className="font-bold text-white text-xs md:text-sm tracking-wide">
               {participantCount}{" "}
-              {participantCount === 1 ? "Active Peer" : "Active Peers"}
+              <span className="hidden sm:inline">
+                {participantCount === 1 ? "Active Peer" : "Active Peers"}
+              </span>
             </span>
           </div>
           {chatClient && channel && (
-            <button
+            <motion.button
+              whileHover={{ scale: 1.03 }}
+              whileTap={{ scale: 0.97 }}
               onClick={() => setIsChatOpen(!isChatOpen)}
-              className={`flex items-center gap-2 px-4 py-2 rounded-xl font-bold text-sm tracking-wide transition-all border ${
+              className={`flex items-center gap-1.5 md:gap-2 px-3 md:px-4 py-1.5 md:py-2 rounded-lg md:rounded-xl font-bold text-[10px] md:text-sm tracking-wider transition-all duration-300 border ${
                 isChatOpen
-                  ? "bg-primary text-white border-primary shadow-[0_0_15px_rgba(139,92,246,0.3)]"
-                  : "bg-white/5 text-white/70 border-white/10 hover:bg-white/10 hover:text-white"
+                  ? "bg-primary/20 text-white border-primary/40 shadow-[0_0_20px_rgba(139,92,246,0.2)]"
+                  : "bg-white/[0.04] text-white/60 border-white/[0.06] hover:bg-white/[0.08] hover:text-white"
               }`}
               title={isChatOpen ? "Hide chat" : "Show chat"}
             >
-              <MessageSquareIcon className="w-4 h-4" />
-              SESSION CHAT
-            </button>
+              <MessageSquareIcon className="w-3.5 h-3.5 md:w-4 md:h-4" />
+              <span className="hidden sm:inline">CHAT</span>
+            </motion.button>
           )}
         </div>
 
         {/* Video Area */}
-        <div className="flex-1 bg-black/40 backdrop-blur-md rounded-2xl overflow-hidden relative border border-white/10 shadow-[0_0_30px_rgba(0,0,0,0.5)] z-10">
+        <div className="flex-1 bg-black/40 backdrop-blur-md rounded-xl md:rounded-2xl overflow-hidden relative border border-white/[0.06] shadow-[0_0_40px_rgba(0,0,0,0.4)] z-10">
           <SpeakerLayout />
         </div>
 
         {/* Call Controls */}
-        <div className="glass-panel p-4 rounded-2xl shadow-[0_0_20px_rgba(0,0,0,0.5)] flex justify-center z-10">
+        <div className="glass-card p-2.5 md:p-4 rounded-xl md:rounded-2xl flex justify-center z-10">
           <CallControls onLeave={() => navigate("/dashboard")} />
         </div>
       </div>
 
       {/* CHAT SECTION */}
       {chatClient && channel && (
-        <div
-          className={`flex flex-col rounded-2xl shadow-[0_0_30px_rgba(0,0,0,0.5)] overflow-hidden bg-[#111111] border border-white/10 z-10 transition-all duration-300 ease-in-out ${
-            isChatOpen ? "w-80 lg:w-96 opacity-100" : "w-0 opacity-0 border-transparent overflow-hidden"
-          }`}
-        >
+        <AnimatePresence>
           {isChatOpen && (
-            <>
-              <div className="bg-black/40 backdrop-blur-md p-4 border-b border-white/10 flex items-center justify-between">
-                <h3 className="font-bold text-white tracking-wide flex items-center gap-2">
-                  <MessageSquareIcon className="w-4 h-4 text-primary" />
-                  Terminal Chat
+            <motion.div
+              initial={{ width: 0, opacity: 0 }}
+              animate={{ width: "auto", opacity: 1 }}
+              exit={{ width: 0, opacity: 0 }}
+              transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+              className="flex flex-col rounded-xl md:rounded-2xl overflow-hidden bg-[#0a0a14] border border-white/[0.06] z-10 w-64 sm:w-72 md:w-80 lg:w-96 shrink-0"
+            >
+              {/* Chat header */}
+              <div className="bg-black/50 backdrop-blur-xl p-3 md:p-4 border-b border-white/[0.06] flex items-center justify-between shrink-0">
+                <h3 className="font-bold text-white text-sm tracking-wide flex items-center gap-2">
+                  <MessageSquareIcon className="w-3.5 h-3.5 md:w-4 md:h-4 text-primary" />
+                  <span className="hidden sm:inline">Session Chat</span>
+                  <span className="sm:hidden">Chat</span>
                 </h3>
-                <button
+                <motion.button
+                  whileHover={{ scale: 1.1, rotate: 90 }}
+                  whileTap={{ scale: 0.9 }}
                   onClick={() => setIsChatOpen(false)}
-                  className="text-white/50 hover:text-white hover:bg-white/10 p-2 rounded-xl transition-colors"
+                  className="text-white/40 hover:text-white hover:bg-white/[0.08] p-1.5 md:p-2 rounded-lg transition-colors"
                   title="Close chat"
                 >
-                  <XIcon className="w-5 h-5" />
-                </button>
+                  <XIcon className="w-4 h-4 md:w-5 md:h-5" />
+                </motion.button>
               </div>
-              <div className="flex-1 overflow-hidden stream-chat-dark custom-scrollbar bg-[#0a0a0a]">
+              {/* Chat content */}
+              <div className="flex-1 overflow-hidden stream-chat-dark custom-scrollbar bg-[#07070d]">
                 <Chat client={chatClient} theme="str-chat__theme-dark">
                   <Channel channel={channel}>
                     <Window>
@@ -109,11 +125,12 @@ function VideoCallUI({ chatClient, channel }) {
                   </Channel>
                 </Chat>
               </div>
-            </>
+            </motion.div>
           )}
-        </div>
+        </AnimatePresence>
       )}
     </div>
   );
 }
+
 export default VideoCallUI;
