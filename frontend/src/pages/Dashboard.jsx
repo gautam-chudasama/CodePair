@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router";
 import { useUser } from "@clerk/react";
 import { useState } from "react";
+import { motion } from "framer-motion";
 import {
   useActiveSessions,
   useCreateSession,
@@ -14,7 +15,7 @@ import ActiveSessions from "../components/ActiveSessions";
 import RecentSessions from "../components/RecentSessions";
 import CreateSessionModal from "../components/CreateSessionModal";
 
-const Dashboard = () =>  {
+const Dashboard = () => {
   const navigate = useNavigate();
   const { user } = useUser();
   const [showCreateModal, setShowCreateModal] = useState(false);
@@ -58,13 +59,30 @@ const Dashboard = () =>  {
 
   return (
     <>
-      <div className="min-h-screen bg-base-300">
-        <Navbar />
-        <WelcomeSection onCreateSession={() => setShowCreateModal(true)} />
+      <div className="min-h-screen bg-[#07070d] bg-aurora text-white overflow-x-hidden relative">
+        {/* Background grid */}
+        <div className="absolute inset-0 bg-grid-dots pointer-events-none z-0" />
+        
+        {/* Animated background mesh */}
+        <div className="absolute inset-0 bg-mesh pointer-events-none z-0" />
 
-        {/* Grid layout */}
-        <div className="container mx-auto px-6 pb-16">
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <Navbar />
+
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.5 }}
+          className="container mx-auto px-4 md:px-6 pb-16 md:pb-20 pt-6 md:pt-10 relative z-10"
+        >
+          <WelcomeSection onCreateSession={() => setShowCreateModal(true)} />
+
+          {/* Grid layout */}
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2, duration: 0.6 }}
+            className="mt-6 md:mt-8 grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-6"
+          >
             <StatsCards
               activeSessionsCount={activeSessions.length}
               recentSessionsCount={recentSessions.length}
@@ -74,13 +92,13 @@ const Dashboard = () =>  {
               isLoading={loadingActiveSessions}
               isUserInSession={isUserInSession}
             />
-          </div>
+          </motion.div>
 
           <RecentSessions
             sessions={recentSessions}
             isLoading={loadingRecentSessions}
           />
-        </div>
+        </motion.div>
       </div>
 
       <CreateSessionModal
@@ -93,6 +111,6 @@ const Dashboard = () =>  {
       />
     </>
   );
-}
+};
 
 export default Dashboard;
