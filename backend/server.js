@@ -19,6 +19,8 @@ app.use(express.json());
 app.use(
   cors({
     origin: [process.env.CLIENT_URL, "http://localhost:2000"],
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
     credentials: true,
   }),
 );
@@ -40,18 +42,39 @@ function executeWithProcess(command, args, code, ext) {
     const filename = join(TEMP_DIR, `exec_${Date.now()}.${ext}`);
     try {
       writeFileSync(filename, code, "utf8");
-      execFile(command, [...args, filename], { timeout: 10000, maxBuffer: 1024 * 512 }, (error, stdout, stderr) => {
-        try { unlinkSync(filename); } catch {}
-        if (error && error.killed) {
-          return resolve({ run: { output: "", stderr: "Execution timed out (10s limit)", code: 1 } });
-        }
-        if (error) {
-          return resolve({ run: { output: stdout || "", stderr: stderr || error.message, code: 1 } });
-        }
-        resolve({ run: { output: stdout, stderr: stderr || "", code: 0 } });
-      });
+      execFile(
+        command,
+        [...args, filename],
+        { timeout: 10000, maxBuffer: 1024 * 512 },
+        (error, stdout, stderr) => {
+          try {
+            unlinkSync(filename);
+          } catch {}
+          if (error && error.killed) {
+            return resolve({
+              run: {
+                output: "",
+                stderr: "Execution timed out (10s limit)",
+                code: 1,
+              },
+            });
+          }
+          if (error) {
+            return resolve({
+              run: {
+                output: stdout || "",
+                stderr: stderr || error.message,
+                code: 1,
+              },
+            });
+          }
+          resolve({ run: { output: stdout, stderr: stderr || "", code: 0 } });
+        },
+      );
     } catch (err) {
-      try { unlinkSync(filename); } catch {}
+      try {
+        unlinkSync(filename);
+      } catch {}
       resolve({ run: { output: "", stderr: err.message, code: 1 } });
     }
   });
@@ -64,30 +87,66 @@ function executeJava(code) {
     try {
       writeFileSync(filename, code, "utf8");
       // Compile
-      execFile("javac", [filename], { timeout: 15000, cwd: TEMP_DIR }, (compErr, compOut, compStderr) => {
-        if (compErr) {
-          try { unlinkSync(filename); } catch {}
-          return resolve({
-            run: { output: "", stderr: compStderr || compErr.message, code: 1 },
-            compile: { stderr: compStderr || compErr.message },
-          });
-        }
-        // Run
-        execFile("java", ["-cp", TEMP_DIR, "Solution"], { timeout: 10000, maxBuffer: 1024 * 512 }, (error, stdout, stderr) => {
-          // Cleanup
-          try { unlinkSync(filename); } catch {}
-          try { unlinkSync(join(TEMP_DIR, "Solution.class")); } catch {}
-          if (error && error.killed) {
-            return resolve({ run: { output: "", stderr: "Execution timed out (10s limit)", code: 1 } });
+      execFile(
+        "javac",
+        [filename],
+        { timeout: 15000, cwd: TEMP_DIR },
+        (compErr, compOut, compStderr) => {
+          if (compErr) {
+            try {
+              unlinkSync(filename);
+            } catch {}
+            return resolve({
+              run: {
+                output: "",
+                stderr: compStderr || compErr.message,
+                code: 1,
+              },
+              compile: { stderr: compStderr || compErr.message },
+            });
           }
-          if (error) {
-            return resolve({ run: { output: stdout || "", stderr: stderr || error.message, code: 1 } });
-          }
-          resolve({ run: { output: stdout, stderr: stderr || "", code: 0 } });
-        });
-      });
+          // Run
+          execFile(
+            "java",
+            ["-cp", TEMP_DIR, "Solution"],
+            { timeout: 10000, maxBuffer: 1024 * 512 },
+            (error, stdout, stderr) => {
+              // Cleanup
+              try {
+                unlinkSync(filename);
+              } catch {}
+              try {
+                unlinkSync(join(TEMP_DIR, "Solution.class"));
+              } catch {}
+              if (error && error.killed) {
+                return resolve({
+                  run: {
+                    output: "",
+                    stderr: "Execution timed out (10s limit)",
+                    code: 1,
+                  },
+                });
+              }
+              if (error) {
+                return resolve({
+                  run: {
+                    output: stdout || "",
+                    stderr: stderr || error.message,
+                    code: 1,
+                  },
+                });
+              }
+              resolve({
+                run: { output: stdout, stderr: stderr || "", code: 0 },
+              });
+            },
+          );
+        },
+      );
     } catch (err) {
-      try { unlinkSync(filename); } catch {}
+      try {
+        unlinkSync(filename);
+      } catch {}
       resolve({ run: { output: "", stderr: err.message, code: 1 } });
     }
   });
