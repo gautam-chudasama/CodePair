@@ -60,6 +60,9 @@ function executeWithProcess(command, args, code, ext) {
             });
           }
           if (error) {
+            if (error.code === "ENOENT" || error.message.includes("ENOENT")) {
+               return Promise.reject(error); // Reject so fallback works
+            }
             return resolve({
               run: {
                 output: stdout || "",
@@ -75,6 +78,9 @@ function executeWithProcess(command, args, code, ext) {
       try {
         unlinkSync(filename);
       } catch {}
+      if (err.code === "ENOENT" || err.message.includes("ENOENT")) {
+         return Promise.reject(err);
+      }
       resolve({ run: { output: "", stderr: err.message, code: 1 } });
     }
   });
@@ -96,6 +102,9 @@ function executeJava(code) {
             try {
               unlinkSync(filename);
             } catch {}
+            if (compErr.code === "ENOENT" || compErr.message.includes("ENOENT")) {
+               return resolve(null); // Return null so we can fallback
+            }
             return resolve({
               run: {
                 output: "",
@@ -177,8 +186,27 @@ async function executeViaWandbox(code) {
   }
 }
 
+// Public Piston API fallback (works for most languages)
+async function executeViaPublicPiston(language, version, files) {
+  try {
+    const response = await fetch("https://emkc.org/api/v2/piston/execute", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        language,
+        version: version || "*",
+        files: files.map(f => ({ name: f.name, content: f.content }))
+      }),
+    });
+    if (!response.ok) return null;
+    return await response.json();
+  } catch {
+    return null;
+  }
+}
+
 app.post("/api/piston/execute", async (req, res) => {
-  const { language, files } = req.body;
+  const { language, version, files } = req.body;
   const code = files?.[0]?.content;
 
   if (!code) {
@@ -188,7 +216,7 @@ app.post("/api/piston/execute", async (req, res) => {
   // 1) Try local Piston Docker first
   try {
     const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 3000);
+    const timeout = setTimeout(() => controller.abort(), 3000); // 3 sec timeout for local check
     const response = await fetch("http://localhost:2000/api/v2/execute", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -210,12 +238,12 @@ app.post("/api/piston/execute", async (req, res) => {
     } else if (language === "python") {
       // Try python3 first, then python
       try {
-        result = await executeWithProcess("python", [], code, "py");
+        result = await executeWithProcess("python3", [], code, "py");
       } catch {
         try {
-          result = await executeWithProcess("python3", [], code, "py");
+          result = await executeWithProcess("python", [], code, "py");
         } catch {
-          // Fall back to Wandbox
+          // Fall back to Wandbox inside here just to be safe
           result = await executeViaWandbox(code);
         }
       }
@@ -227,11 +255,18 @@ app.post("/api/piston/execute", async (req, res) => {
       return res.json(result);
     }
   } catch (err) {
-    console.error("Execution error:", err.message);
+    console.error("Local execution error:", err.message);
+  }
+
+  // 3) Final Fallback to Public Piston API
+  console.log("Falling back to public Piston API for", language);
+  const publicApiResult = await executeViaPublicPiston(language, version, files);
+  if (publicApiResult) {
+    return res.json(publicApiResult);
   }
 
   return res.status(500).json({
-    error: `Cannot execute ${language}. Make sure ${language === "java" ? "JDK" : language} is installed locally, or start the Piston Docker container.`,
+    error: `Cannot execute ${language}. Install ${language === "java" ? "JDK" : language} locally, or start the Piston Docker container.`,
   });
 });
 
