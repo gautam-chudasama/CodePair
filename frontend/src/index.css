@@ -313,13 +313,21 @@ body {
   overflow: hidden !important;
 }
 
-/* The actual video element */
+/* The actual video element — camera feeds use cover */
 .codepair-video-grid .str-video__participant-view video,
 .codepair-video-grid .str-video__video {
   width: 100% !important;
   height: 100% !important;
   object-fit: cover !important;
   border-radius: inherit !important;
+}
+
+/* Screen share track uses contain so the full screen is visible */
+.codepair-video-grid .str-video__participant-view--screen-share video,
+.codepair-video-grid .str-video__participant-view--screen-share .str-video__video,
+.codepair-video-grid .str-video__screen-share video {
+  object-fit: contain !important;
+  background: #000 !important;
 }
 
 /* Avatar/placeholder when video is off */
