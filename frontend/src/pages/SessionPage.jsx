@@ -19,7 +19,8 @@ import { motion } from "framer-motion";
 import useStreamClient from "../hooks/useStreamClient";
 import { StreamCall, StreamVideo } from "@stream-io/video-react-sdk";
 import VideoCallUI from "../components/VideoCallUI";
-
+import toast from "react-hot-toast";
+import confetti from "canvas-confetti";
 function SessionPage() {
   const navigate = useNavigate();
   const { id } = useParams();
@@ -93,6 +94,46 @@ function SessionPage() {
     setOutput(null);
   };
 
+  const normalizeOutput = (output) => {
+    if (!output) return "";
+    return output
+      .trim()
+      .split("\n")
+      .map((line) =>
+        line
+          .trim()
+          .replace(/\[\s+/g, "[")
+          .replace(/\s+\]/g, "]")
+          .replace(/\s*,\s*/g, ",")
+          .replace(/'/g, '"')    // normalize quotes
+          .replace(/\s+/g, " ") // collapse multiple spaces
+      )
+      .filter((line) => line.length > 0)
+      .join("\n");
+  };
+
+  const checkIfTestsPassed = (actualOutput, expectedOutput) => {
+    if (!actualOutput || !expectedOutput) return false;
+    const normalizedActual = normalizeOutput(actualOutput);
+    const normalizedExpected = normalizeOutput(expectedOutput);
+
+    return normalizedActual === normalizedExpected;
+  };
+
+  const triggerConfetti = () => {
+    confetti({
+      particleCount: 80,
+      spread: 250,
+      origin: { x: 0.2, y: 0.6 },
+    });
+
+    confetti({
+      particleCount: 80,
+      spread: 250,
+      origin: { x: 0.8, y: 0.6 },
+    });
+  };
+
   const handleRunCode = async () => {
     setIsRunning(true);
     setOutput(null);
@@ -100,6 +141,20 @@ function SessionPage() {
     const result = await executeCode(selectedLanguage, code);
     setOutput(result);
     setIsRunning(false);
+
+    if (result.success && problemData) {
+      const expectedOutput = problemData.expectedOutput[selectedLanguage];
+      const testsPassed = checkIfTestsPassed(result.output, expectedOutput);
+      
+      if (testsPassed) {
+        triggerConfetti();
+        toast.success("Awesome! Both of you passed all test cases! 🎉");
+      } else {
+        toast.error("Tests failed. Keep trying together!");
+      }
+    } else if (!result.success) {
+      toast.error("Code execution failed!");
+    }
   };
 
   const handleEndSession = () => {
