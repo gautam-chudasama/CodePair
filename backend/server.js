@@ -156,19 +156,26 @@ function executeJava(code) {
       try {
         unlinkSync(filename);
       } catch {}
+      if (err.code === "ENOENT" || err.message.includes("ENOENT")) {
+         return resolve(null);
+      }
       resolve({ run: { output: "", stderr: err.message, code: 1 } });
     }
   });
 }
 
-// Wandbox API fallback for Python
-async function executeViaWandbox(code) {
+// Wandbox API fallback for all languages
+async function executeViaWandbox(code, language) {
+  let compiler = "cpython-3.10.15";
+  if (language === "java") compiler = "openjdk-jdk-22+36";
+  if (language === "javascript") compiler = "nodejs-20.17.0";
+
   try {
     const response = await fetch("https://wandbox.org/api/compile.json", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        compiler: "cpython-3.10.15",
+        compiler,
         code,
       }),
     });
@@ -178,28 +185,12 @@ async function executeViaWandbox(code) {
       run: {
         output: data.program_output || "",
         stderr: data.program_error || data.compiler_error || "",
-        code: data.status || 0,
+        code: parseInt(data.status || "0"),
       },
+      compile: {
+        stderr: data.compiler_error || ""
+      }
     };
-  } catch {
-    return null;
-  }
-}
-
-// Public Piston API fallback (works for most languages)
-async function executeViaPublicPiston(language, version, files) {
-  try {
-    const response = await fetch("https://emkc.org/api/v2/piston/execute", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        language,
-        version: version || "*",
-        files: files.map(f => ({ name: f.name, content: f.content }))
-      }),
-    });
-    if (!response.ok) return null;
-    return await response.json();
   } catch {
     return null;
   }
@@ -240,12 +231,7 @@ app.post("/api/piston/execute", async (req, res) => {
       try {
         result = await executeWithProcess("python3", [], code, "py");
       } catch {
-        try {
-          result = await executeWithProcess("python", [], code, "py");
-        } catch {
-          // Fall back to Wandbox inside here just to be safe
-          result = await executeViaWandbox(code);
-        }
+        result = await executeWithProcess("python", [], code, "py");
       }
     } else if (language === "java") {
       result = await executeJava(code);
@@ -258,11 +244,11 @@ app.post("/api/piston/execute", async (req, res) => {
     console.error("Local execution error:", err.message);
   }
 
-  // 3) Final Fallback to Public Piston API
-  console.log("Falling back to public Piston API for", language);
-  const publicApiResult = await executeViaPublicPiston(language, version, files);
-  if (publicApiResult) {
-    return res.json(publicApiResult);
+  // 3) Final Fallback to Wandbox API
+  console.log("Falling back to Wandbox API for", language);
+  const wandboxResult = await executeViaWandbox(code, language);
+  if (wandboxResult) {
+    return res.json(wandboxResult);
   }
 
   return res.status(500).json({
