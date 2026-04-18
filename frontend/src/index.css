@@ -291,8 +291,116 @@ body {
    ═══════════════════════════════════════════ */
 .str-video {
   --str-video__primary-color: #8b5cf6 !important;
+  background: transparent !important;
 }
 
 .stream-chat-dark {
   background: transparent !important;
+}
+
+/* ═══════════════════════════════════════════
+   STREAM VIDEO — CUSTOM GRID OVERRIDES
+   Ensures both participant videos are always
+   visible and fill their containers properly.
+   ═══════════════════════════════════════════ */
+
+/* ParticipantView container must fill parent */
+.codepair-video-grid .str-video__participant-view {
+  width: 100% !important;
+  height: 100% !important;
+  position: relative !important;
+  border-radius: inherit !important;
+  overflow: hidden !important;
+}
+
+/* The actual video element */
+.codepair-video-grid .str-video__participant-view video,
+.codepair-video-grid .str-video__video {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+  border-radius: inherit !important;
+}
+
+/* Avatar/placeholder when video is off */
+.codepair-video-grid .str-video__participant-view .str-video__video-placeholder {
+  width: 100% !important;
+  height: 100% !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  background: rgba(0, 0, 0, 0.6) !important;
+  border-radius: inherit !important;
+}
+
+/* Name overlay styling */
+.codepair-video-grid .str-video__participant-details {
+  position: absolute !important;
+  bottom: 8px !important;
+  left: 8px !important;
+  z-index: 5 !important;
+  background: rgba(0, 0, 0, 0.6) !important;
+  backdrop-filter: blur(8px) !important;
+  padding: 4px 10px !important;
+  border-radius: 8px !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  font-size: 12px !important;
+  color: white !important;
+}
+
+/* Network quality indicator */
+.codepair-video-grid .str-video__participant-details__connection-quality {
+  position: absolute !important;
+  bottom: 8px !important;
+  right: 8px !important;
+  z-index: 5 !important;
+}
+
+/* Speech indicator ring */
+.codepair-video-grid .str-video__participant-view--speaking {
+  box-shadow: 0 0 0 2px rgba(139, 92, 246, 0.6),
+              0 0 20px rgba(139, 92, 246, 0.15) !important;
+  border-radius: inherit !important;
+}
+
+/* Menu button on participant */
+.codepair-video-grid .str-video__participant-view__menu-button {
+  position: absolute !important;
+  top: 8px !important;
+  left: 8px !important;
+  z-index: 5 !important;
+  background: rgba(0, 0, 0, 0.5) !important;
+  backdrop-filter: blur(8px) !important;
+  border-radius: 6px !important;
+  border: 1px solid rgba(255, 255, 255, 0.06) !important;
+}
+
+/* Call controls styling */
+.str-video__call-controls {
+  background: transparent !important;
+  border: none !important;
+  gap: 6px !important;
+}
+
+.str-video__call-controls__button {
+  background: rgba(255, 255, 255, 0.06) !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  border-radius: 12px !important;
+  transition: all 0.3s ease !important;
+}
+
+.str-video__call-controls__button:hover {
+  background: rgba(255, 255, 255, 0.12) !important;
+  border-color: rgba(255, 255, 255, 0.15) !important;
+  transform: scale(1.05) !important;
+}
+
+.str-video__call-controls__button--leave {
+  background: rgba(239, 68, 68, 0.15) !important;
+  border-color: rgba(239, 68, 68, 0.3) !important;
+}
+
+.str-video__call-controls__button--leave:hover {
+  background: rgba(239, 68, 68, 0.9) !important;
+  border-color: rgba(239, 68, 68, 1) !important;
 }
