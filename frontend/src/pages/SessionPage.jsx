@@ -185,10 +185,10 @@ function SessionPage() {
       >
         <div className="glass-panel w-full h-full rounded-xl md:rounded-2xl overflow-hidden border border-white/[0.06] shadow-[0_0_50px_rgba(0,0,0,0.5)]">
           {isMobile ? (
-            /* MOBILE: Vertical stack */
-            <div className="flex flex-col h-full">
+            /* MOBILE: Scrollable vertical stack */
+            <div className="flex flex-col h-full overflow-y-auto custom-scrollbar">
               {/* Problem Header (compact) */}
-              <div className="p-3 border-b border-white/[0.06] bg-black/30 shrink-0">
+              <div className="p-3 border-b border-white/[0.06] bg-black/30 shrink-0 sticky top-0 z-20">
                 <div className="flex items-center justify-between gap-2">
                   <div className="min-w-0">
                     <h1 className="text-base font-black text-white tracking-tight truncate">
@@ -228,8 +228,8 @@ function SessionPage() {
                 </div>
               </div>
 
-              {/* Code Editor */}
-              <div className="h-[45%] border-b border-white/[0.06]">
+              {/* Code Editor — fixed height so it doesn't collapse */}
+              <div className="shrink-0 border-b border-white/[0.06]" style={{ height: "max(360px, 50vh)" }}>
                 <CodeEditorPanel
                   selectedLanguage={selectedLanguage}
                   code={code}
@@ -240,13 +240,13 @@ function SessionPage() {
                 />
               </div>
 
-              {/* Output */}
-              <div className="h-[15%] border-b border-white/[0.06]">
+              {/* Output — fixed minimum height */}
+              <div className="shrink-0 border-b border-white/[0.06]" style={{ minHeight: "120px", height: "150px" }}>
                 <OutputPanel output={output} />
               </div>
 
-              {/* Video/Chat */}
-              <div className="flex-1 bg-[#07070d]">
+              {/* Video/Chat — fixed height so it's always visible when scrolled to */}
+              <div className="shrink-0 bg-[#07070d]" style={{ height: "max(320px, 45vh)" }}>
                 {isInitializingCall ? (
                   <div className="h-full flex items-center justify-center bg-black/60">
                     <Loader2Icon className="w-8 h-8 animate-spin text-primary" />
