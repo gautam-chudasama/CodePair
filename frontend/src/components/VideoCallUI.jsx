@@ -1,7 +1,7 @@
 import {
   CallControls,
   CallingState,
-  SpeakerLayout,
+  ParticipantView,
   useCallStateHooks,
 } from "@stream-io/video-react-sdk";
 import { Loader2Icon, MessageSquareIcon, UsersIcon, XIcon } from "lucide-react";
@@ -22,9 +22,11 @@ import { motion, AnimatePresence } from "framer-motion";
 
 function VideoCallUI({ chatClient, channel }) {
   const navigate = useNavigate();
-  const { useCallCallingState, useParticipantCount } = useCallStateHooks();
+  const { useCallCallingState, useParticipantCount, useParticipants } =
+    useCallStateHooks();
   const callingState = useCallCallingState();
   const participantCount = useParticipantCount();
+  const participants = useParticipants();
   const [isChatOpen, setIsChatOpen] = useState(false);
 
   if (callingState === CallingState.JOINING) {
@@ -46,7 +48,7 @@ function VideoCallUI({ chatClient, channel }) {
     <div className="h-full flex gap-2 md:gap-4 relative str-video overflow-hidden p-2 md:p-4">
       <div className="flex-1 flex flex-col gap-2 md:gap-4 min-w-0">
         {/* Participants count badge and Chat Toggle */}
-        <div className="flex items-center justify-between gap-2 md:gap-4 glass-card p-2.5 md:p-4 rounded-xl md:rounded-2xl z-10">
+        <div className="flex items-center justify-between gap-2 md:gap-4 glass-card p-2.5 md:p-4 rounded-xl md:rounded-2xl z-10 shrink-0">
           <div className="flex items-center gap-2 md:gap-3 bg-white/[0.04] px-3 md:px-4 py-1.5 md:py-2 rounded-lg md:rounded-xl border border-white/[0.06]">
             <UsersIcon className="w-4 h-4 md:w-5 md:h-5 text-primary" />
             <span className="font-bold text-white text-xs md:text-sm tracking-wide">
@@ -74,13 +76,46 @@ function VideoCallUI({ chatClient, channel }) {
           )}
         </div>
 
-        {/* Video Area */}
-        <div className="flex-1 bg-black/40 backdrop-blur-md rounded-xl md:rounded-2xl overflow-hidden relative border border-white/[0.06] shadow-[0_0_40px_rgba(0,0,0,0.4)] z-10">
-          <SpeakerLayout />
+        {/* Video Area - Custom Grid Layout */}
+        <div className="flex-1 overflow-hidden relative z-10 min-h-0">
+          <div className="codepair-video-grid h-full w-full flex flex-col gap-2">
+            {participants.length === 0 ? (
+              <div className="flex-1 flex items-center justify-center bg-black/40 backdrop-blur-md rounded-xl md:rounded-2xl border border-white/[0.06]">
+                <div className="text-center">
+                  <Loader2Icon className="w-8 h-8 animate-spin text-primary/40 mx-auto mb-3" />
+                  <p className="text-sm text-white/40">Waiting for participants...</p>
+                </div>
+              </div>
+            ) : participants.length === 1 ? (
+              /* Single participant - take full space */
+              <div className="flex-1 bg-black/40 backdrop-blur-md rounded-xl md:rounded-2xl overflow-hidden relative border border-white/[0.06] shadow-[0_0_40px_rgba(0,0,0,0.4)] min-h-0">
+                <ParticipantView
+                  participant={participants[0]}
+                  className="h-full w-full"
+                />
+              </div>
+            ) : (
+              /* Two participants - stack vertically, equal space */
+              <>
+                <div className="flex-1 bg-black/40 backdrop-blur-md rounded-xl md:rounded-2xl overflow-hidden relative border border-white/[0.06] shadow-[0_0_40px_rgba(0,0,0,0.4)] min-h-0">
+                  <ParticipantView
+                    participant={participants[0]}
+                    className="h-full w-full"
+                  />
+                </div>
+                <div className="flex-1 bg-black/40 backdrop-blur-md rounded-xl md:rounded-2xl overflow-hidden relative border border-white/[0.06] shadow-[0_0_40px_rgba(0,0,0,0.4)] min-h-0">
+                  <ParticipantView
+                    participant={participants[1]}
+                    className="h-full w-full"
+                  />
+                </div>
+              </>
+            )}
+          </div>
         </div>
 
         {/* Call Controls */}
-        <div className="glass-card p-2.5 md:p-4 rounded-xl md:rounded-2xl flex justify-center z-10">
+        <div className="glass-card p-2.5 md:p-4 rounded-xl md:rounded-2xl flex justify-center z-10 shrink-0">
           <CallControls onLeave={() => navigate("/dashboard")} />
         </div>
       </div>

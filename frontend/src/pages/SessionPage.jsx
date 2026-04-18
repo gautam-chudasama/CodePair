@@ -268,234 +268,230 @@ function SessionPage() {
               </div>
             </div>
           ) : (
-            /* DESKTOP: Resizable panels */
+            /* DESKTOP: 3-column IDE Layout */
             <PanelGroup direction="horizontal">
-              {/* LEFT PANEL - CODE EDITOR & PROBLEM DETAILS */}
-              <Panel defaultSize={50} minSize={30} className="bg-[#07070d]/30">
-                <PanelGroup direction="vertical">
-                  {/* PROBLEM DSC PANEL */}
-                  <Panel defaultSize={50} minSize={20}>
-                    <div className="h-full overflow-y-auto bg-transparent custom-scrollbar">
-                      {/* HEADER SECTION */}
-                      <div className="p-4 md:p-6 border-b border-white/[0.06] relative overflow-hidden">
-                        <div className="absolute top-0 right-0 w-32 h-32 bg-primary/8 blur-[60px] rounded-full pointer-events-none" />
+              {/* LEFT PANEL - PROBLEM DETAILS */}
+              <Panel defaultSize={30} minSize={20} className="bg-[#07070d]/30">
+                <div className="h-full overflow-y-auto bg-transparent custom-scrollbar">
+                  {/* HEADER SECTION */}
+                  <div className="p-4 md:p-6 border-b border-white/[0.06] relative overflow-hidden">
+                    <div className="absolute top-0 right-0 w-32 h-32 bg-primary/8 blur-[60px] rounded-full pointer-events-none" />
 
-                        <div className="flex flex-col xl:flex-row xl:items-start justify-between gap-4 relative z-10">
-                          <div>
-                            <h1 className="text-2xl md:text-3xl font-black text-white tracking-tight mb-1">
-                              {session?.problem || "Initializing..."}
-                            </h1>
-                            {problemData?.category && (
-                              <p className="text-xs md:text-sm font-bold text-primary/60 uppercase tracking-[0.2em] mt-2 mb-1">
-                                {problemData.category}
-                              </p>
-                            )}
-                            <p className="text-xs md:text-sm text-white/40 flex items-center gap-2 mt-3 flex-wrap">
-                              <span className="px-2 py-0.5 rounded-full bg-white/[0.04] border border-white/[0.06] flex items-center gap-1.5">
-                                <span className="w-1.5 h-1.5 rounded-full bg-accent" />
-                                Host: {session?.host?.name || "..."}
-                              </span>
-                              <span className="px-2 py-0.5 rounded-full bg-white/[0.04] border border-white/[0.06] flex items-center gap-1.5">
-                                <span className="w-1.5 h-1.5 rounded-full bg-success" />
-                                {session?.participant ? 2 : 1}/2 Active
-                              </span>
-                            </p>
-                          </div>
-
-                          <div className="flex flex-wrap items-center gap-2 md:gap-3">
-                            <span
-                              className={`text-[10px] md:text-xs font-bold px-2.5 md:px-3 py-1 rounded-full uppercase tracking-wider ${getDifficultyBadgeClass(
-                                session?.difficulty
-                              )} border border-current/20 bg-current/10`}
-                            >
-                              {session?.difficulty
-                                ? session.difficulty.slice(0, 1).toUpperCase() +
-                                  session.difficulty.slice(1)
-                                : "Easy"}
-                            </span>
-
-                            {isHost && session?.status === "active" && (
-                              <motion.button
-                                whileHover={{ scale: 1.05 }}
-                                whileTap={{ scale: 0.95 }}
-                                onClick={handleEndSession}
-                                disabled={endSessionMutation.isPending}
-                                className="px-3 md:px-4 py-1.5 bg-error/10 text-error hover:bg-error hover:text-white border border-error/20 hover:border-transparent rounded-lg text-[10px] md:text-xs font-bold uppercase tracking-wider transition-all duration-300 flex items-center gap-1.5 md:gap-2"
-                              >
-                                {endSessionMutation.isPending ? (
-                                  <Loader2Icon className="w-3.5 h-3.5 md:w-4 md:h-4 animate-spin" />
-                                ) : (
-                                  <LogOutIcon className="w-3.5 h-3.5 md:w-4 md:h-4" />
-                                )}
-                                End Session
-                              </motion.button>
-                            )}
-                            {session?.status === "completed" && (
-                              <span className="px-3 py-1 bg-white/[0.06] text-white/40 border border-white/[0.08] rounded-lg text-[10px] md:text-xs font-bold uppercase tracking-wider">
-                                Completed
-                              </span>
-                            )}
-                          </div>
-                        </div>
+                    <div className="flex flex-col xl:flex-row xl:items-start justify-between gap-4 relative z-10">
+                      <div>
+                        <h1 className="text-2xl md:text-3xl font-black text-white tracking-tight mb-1">
+                          {session?.problem || "Initializing..."}
+                        </h1>
+                        {problemData?.category && (
+                          <p className="text-xs md:text-sm font-bold text-primary/60 uppercase tracking-[0.2em] mt-2 mb-1">
+                            {problemData.category}
+                          </p>
+                        )}
+                        <p className="text-xs md:text-sm text-white/40 flex items-center gap-2 mt-3 flex-wrap">
+                          <span className="px-2 py-0.5 rounded-full bg-white/[0.04] border border-white/[0.06] flex items-center gap-1.5">
+                            <span className="w-1.5 h-1.5 rounded-full bg-accent" />
+                            Host: {session?.host?.name || "..."}
+                          </span>
+                          <span className="px-2 py-0.5 rounded-full bg-white/[0.04] border border-white/[0.06] flex items-center gap-1.5">
+                            <span className="w-1.5 h-1.5 rounded-full bg-success" />
+                            {session?.participant ? 2 : 1}/2 Active
+                          </span>
+                        </p>
                       </div>
 
-                      <div className="p-4 md:p-6 space-y-6 md:space-y-8">
-                        {/* problem desc */}
-                        {problemData?.description && (
-                          <motion.div
-                            initial={{ opacity: 0, y: 15 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ delay: 0.1 }}
-                            className="relative"
+                      <div className="flex flex-wrap items-center gap-2 md:gap-3">
+                        <span
+                          className={`text-[10px] md:text-xs font-bold px-2.5 md:px-3 py-1 rounded-full uppercase tracking-wider ${getDifficultyBadgeClass(
+                            session?.difficulty
+                          )} border border-current/20 bg-current/10`}
+                        >
+                          {session?.difficulty
+                            ? session.difficulty.slice(0, 1).toUpperCase() +
+                              session.difficulty.slice(1)
+                            : "Easy"}
+                        </span>
+
+                        {isHost && session?.status === "active" && (
+                          <motion.button
+                            whileHover={{ scale: 1.05 }}
+                            whileTap={{ scale: 0.95 }}
+                            onClick={handleEndSession}
+                            disabled={endSessionMutation.isPending}
+                            className="px-3 md:px-4 py-1.5 bg-error/10 text-error hover:bg-error hover:text-white border border-error/20 hover:border-transparent rounded-lg text-[10px] md:text-xs font-bold uppercase tracking-wider transition-all duration-300 flex items-center gap-1.5 md:gap-2"
                           >
-                            <h2 className="text-[10px] md:text-sm font-bold text-white/40 uppercase tracking-[0.2em] mb-3 md:mb-4 flex items-center gap-2">
-                              <span className="w-1.5 h-1.5 md:w-2 md:h-2 rounded-full bg-primary/50" />
-                              Description
-                            </h2>
-                            <div className="space-y-3 md:space-y-4 text-sm md:text-base leading-relaxed text-white/70">
-                              <p>{problemData.description.text}</p>
-                              {problemData.description.notes?.map(
-                                (note, idx) => (
-                                  <p
-                                    key={idx}
-                                    className="p-3 md:p-4 rounded-xl bg-white/[0.03] border border-white/[0.06] text-xs md:text-sm italic text-white/60"
-                                  >
-                                    {note}
-                                  </p>
-                                )
-                              )}
-                            </div>
-                          </motion.div>
+                            {endSessionMutation.isPending ? (
+                              <Loader2Icon className="w-3.5 h-3.5 md:w-4 md:h-4 animate-spin" />
+                            ) : (
+                              <LogOutIcon className="w-3.5 h-3.5 md:w-4 md:h-4" />
+                            )}
+                            End Session
+                          </motion.button>
                         )}
-
-                        {/* examples section */}
-                        {problemData?.examples &&
-                          problemData.examples.length > 0 && (
-                            <motion.div
-                              initial={{ opacity: 0, y: 15 }}
-                              animate={{ opacity: 1, y: 0 }}
-                              transition={{ delay: 0.2 }}
-                              className="relative pt-4 border-t border-white/[0.04]"
-                            >
-                              <h2 className="text-[10px] md:text-sm font-bold text-white/40 uppercase tracking-[0.2em] mb-4 md:mb-6 flex items-center gap-2">
-                                <span className="w-1.5 h-1.5 md:w-2 md:h-2 rounded-full bg-secondary/50" />
-                                Examples
-                              </h2>
-
-                              <div className="space-y-4 md:space-y-6">
-                                {problemData.examples.map((example, idx) => (
-                                  <div key={idx} className="group">
-                                    <div className="flex items-center gap-2 md:gap-3 mb-2 md:mb-3">
-                                      <span className="w-5 h-5 md:w-6 md:h-6 rounded-full bg-white/[0.06] text-[10px] md:text-xs font-bold flex items-center justify-center text-white/60 border border-white/[0.08]">
-                                        {idx + 1}
-                                      </span>
-                                      <p className="font-bold text-white/80 text-xs md:text-sm tracking-wide">
-                                        Example {idx + 1}
-                                      </p>
-                                    </div>
-                                    <div className="bg-black/20 rounded-xl p-3 md:p-5 font-mono text-xs md:text-sm space-y-2 md:space-y-3 border border-white/[0.04] group-hover:border-white/[0.08] transition-colors duration-500">
-                                      <div className="flex flex-col xl:flex-row xl:gap-4">
-                                        <span className="text-primary font-bold min-w-[60px] md:min-w-[70px] uppercase text-[10px] md:text-xs tracking-wider mb-1 xl:mb-0">
-                                          Input:
-                                        </span>
-                                        <span className="text-white/70 break-all">
-                                          {example.input}
-                                        </span>
-                                      </div>
-                                      <div className="flex flex-col xl:flex-row xl:gap-4">
-                                        <span className="text-success font-bold min-w-[60px] md:min-w-[70px] uppercase text-[10px] md:text-xs tracking-wider mb-1 xl:mb-0">
-                                          Output:
-                                        </span>
-                                        <span className="text-white/70 break-all">
-                                          {example.output}
-                                        </span>
-                                      </div>
-                                      {example.explanation && (
-                                        <div className="pt-2 md:pt-3 mt-2 md:mt-3 border-t border-white/[0.06]">
-                                          <span className="text-white/50 font-sans text-[10px] md:text-xs flex flex-col xl:flex-row xl:gap-2 leading-relaxed">
-                                            <span className="font-bold text-white/30 uppercase tracking-wider mb-1 xl:mb-0">
-                                              Explanation:
-                                            </span>
-                                            <span>
-                                              {example.explanation}
-                                            </span>
-                                          </span>
-                                        </div>
-                                      )}
-                                    </div>
-                                  </div>
-                                ))}
-                              </div>
-                            </motion.div>
-                          )}
-
-                        {/* Constraints */}
-                        {problemData?.constraints &&
-                          problemData.constraints.length > 0 && (
-                            <motion.div
-                              initial={{ opacity: 0, y: 15 }}
-                              animate={{ opacity: 1, y: 0 }}
-                              transition={{ delay: 0.3 }}
-                              className="relative pt-4 border-t border-white/[0.04]"
-                            >
-                              <h2 className="text-[10px] md:text-sm font-bold text-white/40 uppercase tracking-[0.2em] mb-3 md:mb-4 flex items-center gap-2">
-                                <span className="w-1.5 h-1.5 md:w-2 md:h-2 rounded-full bg-accent/50" />
-                                Constraints
-                              </h2>
-                              <ul className="space-y-2 md:space-y-3">
-                                {problemData.constraints.map(
-                                  (constraint, idx) => (
-                                    <li
-                                      key={idx}
-                                      className="flex gap-2 md:gap-3 items-start"
-                                    >
-                                      <div className="mt-1.5 w-1 h-1 md:w-1.5 md:h-1.5 rounded-full bg-accent/40 shrink-0" />
-                                      <code className="text-xs md:text-sm font-mono text-white/60 bg-black/20 px-2 py-0.5 rounded border border-white/[0.04]">
-                                        {constraint}
-                                      </code>
-                                    </li>
-                                  )
-                                )}
-                              </ul>
-                            </motion.div>
-                          )}
+                        {session?.status === "completed" && (
+                          <span className="px-3 py-1 bg-white/[0.06] text-white/40 border border-white/[0.08] rounded-lg text-[10px] md:text-xs font-bold uppercase tracking-wider">
+                            Completed
+                          </span>
+                        )}
                       </div>
                     </div>
+                  </div>
+
+                  <div className="p-4 md:p-6 space-y-6 md:space-y-8">
+                    {/* problem desc */}
+                    {problemData?.description && (
+                      <motion.div
+                        initial={{ opacity: 0, y: 15 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.1 }}
+                        className="relative"
+                      >
+                        <h2 className="text-[10px] md:text-sm font-bold text-white/40 uppercase tracking-[0.2em] mb-3 md:mb-4 flex items-center gap-2">
+                          <span className="w-1.5 h-1.5 md:w-2 md:h-2 rounded-full bg-primary/50" />
+                          Description
+                        </h2>
+                        <div className="space-y-3 md:space-y-4 text-sm md:text-base leading-relaxed text-white/70">
+                          <p>{problemData.description.text}</p>
+                          {problemData.description.notes?.map(
+                            (note, idx) => (
+                              <p
+                                key={idx}
+                                className="p-3 md:p-4 rounded-xl bg-white/[0.03] border border-white/[0.06] text-xs md:text-sm italic text-white/60"
+                              >
+                                {note}
+                              </p>
+                            )
+                          )}
+                        </div>
+                      </motion.div>
+                    )}
+
+                    {/* examples section */}
+                    {problemData?.examples &&
+                      problemData.examples.length > 0 && (
+                        <motion.div
+                          initial={{ opacity: 0, y: 15 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{ delay: 0.2 }}
+                          className="relative pt-4 border-t border-white/[0.04]"
+                        >
+                          <h2 className="text-[10px] md:text-sm font-bold text-white/40 uppercase tracking-[0.2em] mb-4 md:mb-6 flex items-center gap-2">
+                            <span className="w-1.5 h-1.5 md:w-2 md:h-2 rounded-full bg-secondary/50" />
+                            Examples
+                          </h2>
+
+                          <div className="space-y-4 md:space-y-6">
+                            {problemData.examples.map((example, idx) => (
+                              <div key={idx} className="group">
+                                <div className="flex items-center gap-2 md:gap-3 mb-2 md:mb-3">
+                                  <span className="w-5 h-5 md:w-6 md:h-6 rounded-full bg-white/[0.06] text-[10px] md:text-xs font-bold flex items-center justify-center text-white/60 border border-white/[0.08]">
+                                    {idx}
+                                  </span>
+                                  <p className="font-bold text-white/80 text-xs md:text-sm tracking-wide">
+                                    Example {idx + 1}
+                                  </p>
+                                </div>
+                                <div className="bg-black/20 rounded-xl p-3 md:p-5 font-mono text-xs md:text-sm space-y-2 md:space-y-3 border border-white/[0.04] group-hover:border-white/[0.08] transition-colors duration-500">
+                                  <div className="flex flex-col xl:flex-row xl:gap-4">
+                                    <span className="text-primary font-bold min-w-[60px] md:min-w-[70px] uppercase text-[10px] md:text-xs tracking-wider mb-1 xl:mb-0">
+                                      Input:
+                                    </span>
+                                    <span className="text-white/70 break-all">
+                                      {example.input}
+                                    </span>
+                                  </div>
+                                  <div className="flex flex-col xl:flex-row xl:gap-4">
+                                    <span className="text-success font-bold min-w-[60px] md:min-w-[70px] uppercase text-[10px] md:text-xs tracking-wider mb-1 xl:mb-0">
+                                      Output:
+                                    </span>
+                                    <span className="text-white/70 break-all">
+                                      {example.output}
+                                    </span>
+                                  </div>
+                                  {example.explanation && (
+                                    <div className="pt-2 md:pt-3 mt-2 md:mt-3 border-t border-white/[0.06]">
+                                      <span className="text-white/50 font-sans text-[10px] md:text-xs flex flex-col xl:flex-row xl:gap-2 leading-relaxed">
+                                        <span className="font-bold text-white/30 uppercase tracking-wider mb-1 xl:mb-0">
+                                          Explanation:
+                                        </span>
+                                        <span>
+                                          {example.explanation}
+                                        </span>
+                                      </span>
+                                    </div>
+                                  )}
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        </motion.div>
+                      )}
+
+                    {/* Constraints */}
+                    {problemData?.constraints &&
+                      problemData.constraints.length > 0 && (
+                        <motion.div
+                          initial={{ opacity: 0, y: 15 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{ delay: 0.3 }}
+                          className="relative pt-4 border-t border-white/[0.04]"
+                        >
+                          <h2 className="text-[10px] md:text-sm font-bold text-white/40 uppercase tracking-[0.2em] mb-3 md:mb-4 flex items-center gap-2">
+                            <span className="w-1.5 h-1.5 md:w-2 md:h-2 rounded-full bg-accent/50" />
+                            Constraints
+                          </h2>
+                          <ul className="space-y-2 md:space-y-3">
+                            {problemData.constraints.map(
+                              (constraint, idx) => (
+                                <li
+                                  key={idx}
+                                  className="flex gap-2 md:gap-3 items-start"
+                                >
+                                  <div className="mt-1.5 w-1 h-1 md:w-1.5 md:h-1.5 rounded-full bg-accent/40 shrink-0" />
+                                  <code className="text-xs md:text-sm font-mono text-white/60 bg-black/20 px-2 py-0.5 rounded border border-white/[0.04]">
+                                    {constraint}
+                                  </code>
+                                </li>
+                              )
+                            )}
+                          </ul>
+                        </motion.div>
+                      )}
+                  </div>
+                </div>
+              </Panel>
+
+              <PanelResizeHandle className="w-1 md:w-1.5 bg-white/[0.03] hover:bg-primary/40 active:bg-primary transition-colors duration-300 cursor-col-resize relative flex items-center justify-center group">
+                <div className="w-0.5 h-8 bg-white/15 group-hover:bg-white/60 rounded-full transition-all duration-300 group-hover:h-12" />
+              </PanelResizeHandle>
+
+              {/* MIDDLE PANEL - CODE EDITOR & OUTPUT */}
+              <Panel defaultSize={45} minSize={30} className="bg-[#07070d]/30">
+                <PanelGroup direction="vertical">
+                  <Panel
+                    defaultSize={70}
+                    minSize={20}
+                    className="bg-[#07070d]/30"
+                  >
+                    <CodeEditorPanel
+                      selectedLanguage={selectedLanguage}
+                      code={code}
+                      isRunning={isRunning}
+                      onLanguageChange={handleLanguageChange}
+                      onCodeChange={(value) => setCode(value)}
+                      onRunCode={handleRunCode}
+                    />
                   </Panel>
 
                   <PanelResizeHandle className="h-1 md:h-1.5 bg-white/[0.03] hover:bg-primary/40 active:bg-primary transition-colors duration-300 cursor-row-resize relative flex items-center justify-center group">
                     <div className="h-0.5 w-8 bg-white/15 group-hover:bg-white/60 rounded-full transition-all duration-300 group-hover:w-12" />
                   </PanelResizeHandle>
 
-                  <Panel defaultSize={50} minSize={20}>
-                    <PanelGroup direction="vertical">
-                      <Panel
-                        defaultSize={70}
-                        minSize={30}
-                        className="bg-[#07070d]/30"
-                      >
-                        <CodeEditorPanel
-                          selectedLanguage={selectedLanguage}
-                          code={code}
-                          isRunning={isRunning}
-                          onLanguageChange={handleLanguageChange}
-                          onCodeChange={(value) => setCode(value)}
-                          onRunCode={handleRunCode}
-                        />
-                      </Panel>
-
-                      <PanelResizeHandle className="h-1 md:h-1.5 bg-white/[0.03] hover:bg-primary/40 active:bg-primary transition-colors duration-300 cursor-row-resize relative flex items-center justify-center group">
-                        <div className="h-0.5 w-8 bg-white/15 group-hover:bg-white/60 rounded-full transition-all duration-300 group-hover:w-12" />
-                      </PanelResizeHandle>
-
-                      <Panel
-                        defaultSize={30}
-                        minSize={15}
-                        className="bg-[#07070d]/50"
-                      >
-                        <OutputPanel output={output} />
-                      </Panel>
-                    </PanelGroup>
+                  <Panel
+                    defaultSize={30}
+                    minSize={15}
+                    className="bg-[#07070d]/50"
+                  >
+                    <OutputPanel output={output} />
                   </Panel>
                 </PanelGroup>
               </Panel>
@@ -505,7 +501,7 @@ function SessionPage() {
               </PanelResizeHandle>
 
               {/* RIGHT PANEL - VIDEO CALLS & CHAT */}
-              <Panel defaultSize={50} minSize={30} className="bg-[#07070d]">
+              <Panel defaultSize={25} minSize={15} className="bg-[#07070d]">
                 <div className="h-full w-full overflow-hidden relative">
                   {isInitializingCall ? (
                     <div className="h-full flex items-center justify-center flex-col relative z-10 bg-black/70 backdrop-blur-xl">
@@ -513,26 +509,25 @@ function SessionPage() {
                         <Loader2Icon className="w-10 h-10 md:w-12 md:h-12 animate-spin text-primary" />
                         <div className="absolute inset-0 rounded-full animate-ping opacity-20 bg-primary" />
                       </div>
-                      <p className="text-lg md:text-xl font-bold text-white tracking-wide">
+                      <p className="text-lg md:text-xl font-bold text-white tracking-wide text-center px-4">
                         Establishing Connection...
                       </p>
-                      <p className="text-xs md:text-sm text-white/40 mt-2">
+                      <p className="text-xs md:text-sm text-white/40 mt-2 text-center px-4">
                         Securing peer-to-peer video streams
                       </p>
                     </div>
                   ) : !streamClient || !call ? (
-                    <div className="h-full flex items-center justify-center relative z-10 bg-black/70 backdrop-blur-xl">
-                      <div className="glass-card p-6 md:p-10 max-w-md text-center rounded-2xl">
-                        <div className="w-20 h-20 md:w-24 md:h-24 bg-error/8 border border-error/15 rounded-2xl flex items-center justify-center mx-auto mb-5 md:mb-6 shadow-[0_0_40px_rgba(239,68,68,0.12)]">
-                          <PhoneOffIcon className="w-8 h-8 md:w-10 md:h-10 text-error/70" />
+                    <div className="h-full flex items-center justify-center relative z-10 bg-black/70 backdrop-blur-xl p-4">
+                      <div className="glass-card p-6 max-w-sm text-center rounded-2xl">
+                        <div className="w-16 h-16 bg-error/8 border border-error/15 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-[0_0_40px_rgba(239,68,68,0.12)]">
+                          <PhoneOffIcon className="w-8 h-8 text-error/70" />
                         </div>
-                        <h2 className="text-xl md:text-2xl font-black text-white mb-2 md:mb-3">
+                        <h2 className="text-lg md:text-xl font-black text-white mb-2">
                           Connection Failed
                         </h2>
                         <p className="text-white/40 text-xs md:text-sm leading-relaxed">
                           Unable to establish connection to the remote
-                          environment. Please check your network or try
-                          refreshing.
+                          environment. Please try refreshing.
                         </p>
                       </div>
                     </div>
