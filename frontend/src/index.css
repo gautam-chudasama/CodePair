@@ -302,15 +302,39 @@ body {
    STREAM VIDEO — CUSTOM GRID OVERRIDES
    Ensures both participant videos are always
    visible and fill their containers properly.
+   Uses absolute positioning to prevent Stream
+   SDK internal styles from collapsing cells.
    ═══════════════════════════════════════════ */
 
-/* ParticipantView container must fill parent */
+/* Each grid cell must be a positioning context */
+.codepair-video-grid > div {
+  position: relative !important;
+  overflow: hidden !important;
+}
+
+/* ParticipantView must fill the entire cell absolutely */
 .codepair-video-grid .str-video__participant-view {
+  position: absolute !important;
+  inset: 0 !important;
   width: 100% !important;
   height: 100% !important;
-  position: relative !important;
   border-radius: inherit !important;
   overflow: hidden !important;
+}
+
+/* Nested camera grid cells (inside the cameras row) also need positioning */
+.codepair-video-grid > div > div {
+  position: relative !important;
+  overflow: hidden !important;
+}
+
+/* Screen share ParticipantView also absolute fills */
+.codepair-screenshare.str-video__participant-view,
+.codepair-screenshare .str-video__participant-view {
+  position: absolute !important;
+  inset: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
 }
 
 /* The actual video element — camera feeds use cover */
