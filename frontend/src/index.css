@@ -325,7 +325,9 @@ body {
 /* Screen share track uses contain so the full screen is visible */
 .codepair-video-grid .str-video__participant-view--screen-share video,
 .codepair-video-grid .str-video__participant-view--screen-share .str-video__video,
-.codepair-video-grid .str-video__screen-share video {
+.codepair-video-grid .str-video__screen-share video,
+.codepair-screenshare video,
+.codepair-screenshare .str-video__video {
   object-fit: contain !important;
   background: #000 !important;
 }

@@ -53,82 +53,6 @@ function VideoCallUI({ chatClient, channel }) {
     );
   }
 
-  // Renders the screen share layout: large screen share + small camera tiles
-  const renderScreenShareLayout = () => (
-    <div className="codepair-video-grid h-full w-full flex flex-col gap-2">
-      {/* Screen share - takes most space */}
-      <div className="flex-[3] bg-black/40 backdrop-blur-md rounded-xl md:rounded-2xl overflow-hidden relative border border-primary/20 shadow-[0_0_40px_rgba(139,92,246,0.1)] min-h-0">
-        {/* Screen share badge */}
-        <div className="absolute top-2 left-2 z-10 flex items-center gap-1.5 bg-primary/80 backdrop-blur-sm text-white text-[10px] font-bold px-2.5 py-1 rounded-lg border border-primary/40 shadow-lg">
-          <MonitorIcon className="w-3 h-3" />
-          <span>Screen Share</span>
-        </div>
-        <ParticipantView
-          participant={screenSharingParticipant}
-          trackType="screenShareTrack"
-          className="h-full w-full"
-        />
-      </div>
-
-      {/* Camera feeds - small row at the bottom */}
-      <div className="flex-[1] flex gap-2 min-h-0" style={{ maxHeight: "30%" }}>
-        {participants.map((participant) => (
-          <div
-            key={participant.sessionId}
-            className="flex-1 bg-black/40 backdrop-blur-md rounded-xl overflow-hidden relative border border-white/[0.06] shadow-[0_0_20px_rgba(0,0,0,0.3)] min-h-0 min-w-0"
-          >
-            <ParticipantView
-              participant={participant}
-              trackType="videoTrack"
-              className="h-full w-full"
-            />
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-
-  // Renders the normal camera-only layout
-  const renderCameraLayout = () => (
-    <div className="codepair-video-grid h-full w-full flex flex-col gap-2">
-      {participants.length === 0 ? (
-        <div className="flex-1 flex items-center justify-center bg-black/40 backdrop-blur-md rounded-xl md:rounded-2xl border border-white/[0.06]">
-          <div className="text-center">
-            <Loader2Icon className="w-8 h-8 animate-spin text-primary/40 mx-auto mb-3" />
-            <p className="text-sm text-white/40">Waiting for participants...</p>
-          </div>
-        </div>
-      ) : participants.length === 1 ? (
-        /* Single participant - take full space */
-        <div className="flex-1 bg-black/40 backdrop-blur-md rounded-xl md:rounded-2xl overflow-hidden relative border border-white/[0.06] shadow-[0_0_40px_rgba(0,0,0,0.4)] min-h-0">
-          <ParticipantView
-            participant={participants[0]}
-            trackType="videoTrack"
-            className="h-full w-full"
-          />
-        </div>
-      ) : (
-        /* Two participants - stack vertically, equal space */
-        <>
-          <div className="flex-1 bg-black/40 backdrop-blur-md rounded-xl md:rounded-2xl overflow-hidden relative border border-white/[0.06] shadow-[0_0_40px_rgba(0,0,0,0.4)] min-h-0">
-            <ParticipantView
-              participant={participants[0]}
-              trackType="videoTrack"
-              className="h-full w-full"
-            />
-          </div>
-          <div className="flex-1 bg-black/40 backdrop-blur-md rounded-xl md:rounded-2xl overflow-hidden relative border border-white/[0.06] shadow-[0_0_40px_rgba(0,0,0,0.4)] min-h-0">
-            <ParticipantView
-              participant={participants[1]}
-              trackType="videoTrack"
-              className="h-full w-full"
-            />
-          </div>
-        </>
-      )}
-    </div>
-  );
-
   return (
     <div className="h-full flex gap-2 md:gap-4 relative str-video overflow-hidden p-2 md:p-4">
       <div className="flex-1 flex flex-col gap-2 md:gap-4 min-w-0">
@@ -172,11 +96,56 @@ function VideoCallUI({ chatClient, channel }) {
           </div>
         </div>
 
-        {/* Video Area — switches layout based on screen share state */}
+        {/* Video Area */}
         <div className="flex-1 overflow-hidden relative z-10 min-h-0">
-          {hasOngoingScreenShare && screenSharingParticipant
-            ? renderScreenShareLayout()
-            : renderCameraLayout()}
+          <div className="codepair-video-grid h-full w-full flex flex-col gap-2">
+
+            {/* SCREEN SHARE — only visible when someone is sharing */}
+            {hasOngoingScreenShare && screenSharingParticipant && (
+              <div className="flex-[2] bg-black rounded-xl md:rounded-2xl overflow-hidden relative border border-primary/20 shadow-[0_0_30px_rgba(139,92,246,0.08)] min-h-0">
+                {/* Badge */}
+                <div className="absolute top-2 left-2 z-10 flex items-center gap-1.5 bg-primary/80 backdrop-blur-sm text-white text-[10px] font-bold px-2.5 py-1 rounded-lg border border-primary/40 shadow-lg">
+                  <MonitorIcon className="w-3 h-3" />
+                  <span>Screen Share</span>
+                </div>
+                <ParticipantView
+                  participant={screenSharingParticipant}
+                  trackType="screenShareTrack"
+                  className="h-full w-full codepair-screenshare"
+                />
+              </div>
+            )}
+
+            {/* CAMERA FEEDS — always visible for ALL participants */}
+            {participants.length === 0 ? (
+              <div className="flex-1 flex items-center justify-center bg-black/40 backdrop-blur-md rounded-xl md:rounded-2xl border border-white/[0.06]">
+                <div className="text-center">
+                  <Loader2Icon className="w-8 h-8 animate-spin text-primary/40 mx-auto mb-3" />
+                  <p className="text-sm text-white/40">Waiting for participants...</p>
+                </div>
+              </div>
+            ) : (
+              <div
+                className={`flex gap-2 min-h-0 ${
+                  hasOngoingScreenShare ? "flex-1" : "flex-1 flex-col"
+                }`}
+              >
+                {participants.map((participant) => (
+                  <div
+                    key={participant.sessionId}
+                    className="flex-1 bg-black/40 backdrop-blur-md rounded-xl md:rounded-2xl overflow-hidden relative border border-white/[0.06] shadow-[0_0_30px_rgba(0,0,0,0.3)] min-h-0 min-w-0"
+                  >
+                    <ParticipantView
+                      participant={participant}
+                      trackType="videoTrack"
+                      className="h-full w-full"
+                    />
+                  </div>
+                ))}
+              </div>
+            )}
+
+          </div>
         </div>
 
         {/* Call Controls */}
