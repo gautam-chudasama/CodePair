@@ -18,7 +18,11 @@ const app = express();
 app.use(express.json());
 app.use(
   cors({
-    origin: [process.env.CLIENT_URL, "http://localhost:2000"],
+    origin: [
+      process.env.CLIENT_URL,
+      "http://localhost:2000",
+      "https://code-pair-git-bugfixes-gautam-chudasamas-projects.vercel.app",
+    ],
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
     credentials: true,
