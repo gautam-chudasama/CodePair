@@ -4,6 +4,7 @@ import {
   SignOutButton,
   SignUpButton,
   UserButton,
+  useAuth,
   useUser,
 } from "@clerk/react";
 import { Navigate, Route, Routes } from "react-router";
@@ -13,13 +14,32 @@ import Dashboard from "./pages/Dashboard";
 import { Toaster } from "react-hot-toast";
 import ProblemPage from "./pages/ProblemPage";
 import SessionPage from "./pages/SessionPage";
+import axiosInstance from "./lib/axios";
+import { useEffect } from "react";
+
+function AxiosInterceptorSetup({ children }) {
+  const { getToken } = useAuth();
+  
+  useEffect(() => {
+    const interceptor = axiosInstance.interceptors.request.use(async (config) => {
+      const token = await getToken();
+      if (token) {
+        config.headers.Authorization = `Bearer ${token}`;
+      }
+      return config;
+    });
+    return () => axiosInstance.interceptors.request.eject(interceptor);
+  }, [getToken]);
+
+  return children;
+}
 
 function App() {
   const { isSignedIn, isLoaded } = useUser();
   if (!isLoaded) return null;
   
   return (
-    <>
+    <AxiosInterceptorSetup>
       <Routes>
         <Route
           path="/"
@@ -43,7 +63,7 @@ function App() {
         />
       </Routes>
       <Toaster />
-    </>
+    </AxiosInterceptorSetup>
   );
 }
 
