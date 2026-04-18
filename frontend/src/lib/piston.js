@@ -41,7 +41,7 @@ export async function executeCode(language, code) {
         version: languageConfig.version,
         files: [
           {
-            name: `main.${getFileExtension(language)}`,
+            name: language === "java" ? "Solution.java" : `main.${getFileExtension(language)}`,
             content: code,
           },
         ],

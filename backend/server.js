@@ -64,6 +64,9 @@ function executeWithProcess(command, args, code, ext) {
             });
           }
           if (error) {
+            if (error.code === "ENOENT" || error.message.includes("ENOENT")) {
+               return Promise.reject(error); // Reject so fallback works
+            }
             return resolve({
               run: {
                 output: stdout || "",
@@ -79,6 +82,9 @@ function executeWithProcess(command, args, code, ext) {
       try {
         unlinkSync(filename);
       } catch {}
+      if (err.code === "ENOENT" || err.message.includes("ENOENT")) {
+         return Promise.reject(err);
+      }
       resolve({ run: { output: "", stderr: err.message, code: 1 } });
     }
   });
@@ -100,6 +106,9 @@ function executeJava(code) {
             try {
               unlinkSync(filename);
             } catch {}
+            if (compErr.code === "ENOENT" || compErr.message.includes("ENOENT")) {
+               return resolve(null); // Return null so we can fallback
+            }
             return resolve({
               run: {
                 output: "",
@@ -151,19 +160,26 @@ function executeJava(code) {
       try {
         unlinkSync(filename);
       } catch {}
+      if (err.code === "ENOENT" || err.message.includes("ENOENT")) {
+         return resolve(null);
+      }
       resolve({ run: { output: "", stderr: err.message, code: 1 } });
     }
   });
 }
 
-// Wandbox API fallback for Python
-async function executeViaWandbox(code) {
+// Wandbox API fallback for all languages
+async function executeViaWandbox(code, language) {
+  let compiler = "cpython-3.10.15";
+  if (language === "java") compiler = "openjdk-jdk-22+36";
+  if (language === "javascript") compiler = "nodejs-20.17.0";
+
   try {
     const response = await fetch("https://wandbox.org/api/compile.json", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        compiler: "cpython-3.10.15",
+        compiler,
         code,
       }),
     });
@@ -173,8 +189,11 @@ async function executeViaWandbox(code) {
       run: {
         output: data.program_output || "",
         stderr: data.program_error || data.compiler_error || "",
-        code: data.status || 0,
+        code: parseInt(data.status || "0"),
       },
+      compile: {
+        stderr: data.compiler_error || ""
+      }
     };
   } catch {
     return null;
@@ -182,7 +201,7 @@ async function executeViaWandbox(code) {
 }
 
 app.post("/api/piston/execute", async (req, res) => {
-  const { language, files } = req.body;
+  const { language, version, files } = req.body;
   const code = files?.[0]?.content;
 
   if (!code) {
@@ -192,7 +211,7 @@ app.post("/api/piston/execute", async (req, res) => {
   // 1) Try local Piston Docker first
   try {
     const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 3000);
+    const timeout = setTimeout(() => controller.abort(), 3000); // 3 sec timeout for local check
     const response = await fetch("http://localhost:2000/api/v2/execute", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -214,14 +233,9 @@ app.post("/api/piston/execute", async (req, res) => {
     } else if (language === "python") {
       // Try python3 first, then python
       try {
-        result = await executeWithProcess("python", [], code, "py");
+        result = await executeWithProcess("python3", [], code, "py");
       } catch {
-        try {
-          result = await executeWithProcess("python3", [], code, "py");
-        } catch {
-          // Fall back to Wandbox
-          result = await executeViaWandbox(code);
-        }
+        result = await executeWithProcess("python", [], code, "py");
       }
     } else if (language === "java") {
       result = await executeJava(code);
@@ -231,11 +245,18 @@ app.post("/api/piston/execute", async (req, res) => {
       return res.json(result);
     }
   } catch (err) {
-    console.error("Execution error:", err.message);
+    console.error("Local execution error:", err.message);
+  }
+
+  // 3) Final Fallback to Wandbox API
+  console.log("Falling back to Wandbox API for", language);
+  const wandboxResult = await executeViaWandbox(code, language);
+  if (wandboxResult) {
+    return res.json(wandboxResult);
   }
 
   return res.status(500).json({
-    error: `Cannot execute ${language}. Make sure ${language === "java" ? "JDK" : language} is installed locally, or start the Piston Docker container.`,
+    error: `Cannot execute ${language}. Install ${language === "java" ? "JDK" : language} locally, or start the Piston Docker container.`,
   });
 });
 
